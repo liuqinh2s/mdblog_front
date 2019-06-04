@@ -38,15 +38,6 @@
     data() {
       return {
         articles: [
-          // {
-          //   hasImage: true,
-          //   imageSrc: 'https://upload-images.jianshu.io/upload_images/16050459-ef8ab9d3d5481a99.jpeg?imageMogr2/auto-orient/strip|imageView2/1/w/360/h/240',
-          //   title: 'Spring AOP是什么？你都拿它做什么？',
-          //   summary: '为什么会有面向切面编程（AOP）？我们知道Java是一个面向对象（OOP）的语言，但它有一些弊端，比如当我们需要为多个不具有继承关系的对象引入一...',
-          //   nickName: 'liuqinh2s',
-          //   comments_count: 4,
-          //   likes_count: 49,
-          // }
         ],
       }
     },
@@ -88,11 +79,6 @@
 </script>
 
 <style scoped>
-  .block {
-
-  }
-
-
   .article-list {
     min-height: 112px;
     padding: 0;

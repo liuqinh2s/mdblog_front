@@ -15,19 +15,20 @@ import 'font-awesome/css/font-awesome.min.css'
 import 'github-markdown-css'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/googlecode.css' //样式文件
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import BootstrapVue from 'bootstrap-vue'
+
 // import '@/assets/css/vue.css'
-
-
-import $ from 'jquery'
 
 fontawesome.library.add(solid)
 fontawesome.library.add(regular)
 fontawesome.library.add(brands)
 
-// Vue.component('font-awesome-icon', FontAwesomeIcon)
-
 Vue.use(VueResource)
 Vue.use(ElementUI)
+Vue.use(BootstrapVue)
 
 Vue.directive('highlight',function (el) {
   let blocks = el.querySelectorAll('pre code');
@@ -42,7 +43,6 @@ Vue.http.interceptors.push((request, next) => {
   next();
 });
 
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,

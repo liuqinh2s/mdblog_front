@@ -6,7 +6,6 @@
         <b>·</b>
         <el-link class="title-text" v-on:click="toRegister">注册</el-link>
       </h3>
-
       <el-form v-show="showLogin" :model="ruleForm" :rules="rules" ref="loginForm" class="demo-ruleForm">
         <el-form-item prop="userUnique">
           <el-input type="text" placeholder="请输入邮箱或手机" v-model="ruleForm.userUnique" @keyup.enter.native="login"></el-input>
@@ -82,7 +81,6 @@
   </div>
 </template>
 <script>
-  import {setCookie, getCookie} from '../assets/js/cookie.js'
   import {isPhone, isEmail} from '../assets/js/common.js'
 
   export default {

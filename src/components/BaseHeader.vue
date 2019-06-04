@@ -41,59 +41,8 @@
       </router-link>
     </div>
     <div class="header-right">
-      <!--      <input type="search" placeholder="搜索" class="search"></input>-->
-<!--      <div class="user" v-if="isLogin" @mouseover="isDropdown = true" @mouseleave="isDropdown = false">-->
-<!--        <div data-hover="dropdown">-->
-<!--          <a class="avatar" :href="userPage"><img :src="avatar" alt="头像"></a>-->
-<!--        </div>-->
-<!--        <ul class="dropdown-menu" v-show="isDropdown">-->
-<!--          <li>-->
-<!--            <a href="/u/188fd0cec4ed">-->
-<!--              <i class="fas fa-user"></i><span>我的主页</span>-->
-<!--            </a></li>-->
-<!--          <li>-->
-<!--          <li>-->
-<!--            <a href="/u/188fd0cec4ed">-->
-<!--              <i class="fas fa-comment-dots"></i><span>我的消息</span>-->
-<!--            </a>-->
-<!--          </li>-->
-<!--          <li>-->
-<!--            &lt;!&ndash; TODO bookmarks_path &ndash;&gt;-->
-<!--            <a href="/bookmarks">-->
-<!--              <i class="fas fa-bookmark"></i><span>收藏的文章</span>-->
-<!--            </a>-->
-<!--          </li>-->
-<!--          <li>-->
-<!--            <a href="/users/188fd0cec4ed/liked_notes">-->
-<!--              <i class="fas fa-heart"></i><span>喜欢的文章</span>-->
-<!--            </a></li>-->
-<!--          <li>-->
-<!--            <a href="/settings">-->
-<!--              <i class="fas fa-cog"></i><span>设置</span>-->
-<!--            </a></li>-->
-<!--          <li>-->
-<!--            <a href="/faqs">-->
-<!--              <i class="fas fa-reply"></i><span>帮助与反馈</span>-->
-<!--            </a></li>-->
-<!--          <li>-->
-<!--            <a rel="nofollow" data-method="delete" href="/sign_out">-->
-<!--              <i class="fas fa-sign-out-alt"></i><span>退出</span>-->
-<!--            </a></li>-->
-<!--        </ul>-->
-<!--      </div>-->
-<!--      <div v-else>-->
-<!--        <div class="user-button">-->
-<!--          <el-button type="danger" round @click="login">登陆/注册</el-button>-->
-<!--        </div>-->
-<!--        <div class="user-icon">-->
-<!--          <a href="/login">-->
-<!--            <i class="fas fa-user"></i>-->
-<!--          </a>-->
-<!--        </div>-->
-<!--      </div>-->
     </div>
     <div class="header-search">
-      <!--      <el-input v-model="input" placeholder="请输入内容"></el-input>-->
       <b-input-group
         :key=""
       >
@@ -107,15 +56,6 @@
 </template>
 
 <script>
-  import 'bootstrap/dist/css/bootstrap.css'
-  import 'bootstrap-vue/dist/bootstrap-vue.css'
-  import 'bootstrap/dist/js/bootstrap.min.js'
-  import BootstrapVue from 'bootstrap-vue'
-  import Vue from 'vue'
-  /*引入公共方法*/
-  import {setCookie, getCookie, delCookie} from '../assets/js/cookie.js'
-
-  Vue.use(BootstrapVue);
 
   export default {
     name: "BaseHeader",
@@ -139,7 +79,6 @@
       this.$http.get("http://localhost:8080/api/v1/user/getAvatar").then((res)=>{
         console.log(res);
         this.avatar = res.bodyText;
-        // this.avatar = res.data.
       });
     },
   }
@@ -368,6 +307,9 @@
       display: none;
     }
 
+    .header {
+      border-bottom: solid 1px #f7f7f7;
+    }
   }
 
   @media screen and (min-width: 1042px) {

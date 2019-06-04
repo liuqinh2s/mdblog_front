@@ -25,7 +25,7 @@
             </div>
           </div>
         </div>
-        <div ref="article"></div>
+        <div ref="article" class="markdown-body"></div>
       </article>
     </div>
   </div>
@@ -55,36 +55,31 @@
     },
     mounted() {
       var md = require('turpan');
-      this.$http.get("http://localhost:8080/api/v1/article/getArticle?articleId="+this.$route.params.articleId).then((res)=>{
+      this.$http.get("http://localhost:8080/api/v1/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
         console.log(res)
         this.$refs.article.innerHTML = md.render(res.data.content)
+        this.title = res.data.title
+        this.words_count = res.data.wordsCount
+        this.time = this.getTime(res.data.createTime)
       })
-      // let article = ""
-      // let html = md.render(article)
-      // console.log(html)
-      // this.$refs.main.innerHTML = html;
     },
-    methods:{
+    methods: {
+      getTime(time = +new Date()) {
+        var date = new Date(time + 8 * 3600 * 1000);
+        return date.toJSON().substr(0, 19).replace('T', ' ');
+      }
     }
   }
 </script>
 
-<style scoped>
+<style>
 
-  /*@import '../assets/css/misty-light-windows.css';*/
-
-  .markdown-body{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  html, body{
+  html, body {
     height: 100%;
     background-color: white;
   }
 
-  .main{
+  .main {
 
   }
 
@@ -94,7 +89,9 @@
     align-items: center;
   }
 
-
+  article img {
+    width: 100%;
+  }
 
   h1 {
     font-size: 34px;
@@ -120,26 +117,26 @@
     margin-left: 8px;
   }
 
-  .name{
+  .name {
     color: black;
     size: 16px;
   }
 
-  .meta{
+  .meta {
     color: #909090;
     font-size: 0.875rem;
   }
 
-  @media screen and (min-width: 700px){
-    article{
+  @media screen and (min-width: 700px) {
+    article {
       width: 700px;
       padding: 40px 20px;
       margin-top: 60px;
     }
   }
 
-  @media screen and (max-width: 700px){
-    article{
+  @media screen and (max-width: 700px) {
+    article {
       padding: 20px 10px;
       margin-top: 60px;
       margin-bottom: 60px;

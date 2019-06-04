@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="editor-main">
     <BaseHeader v-on:save-article="saveArticle"></BaseHeader>
-    <div class="editor-main">
-      <el-input v-model="title" placeholder="文章标题"></el-input>
+    <div class="editor-wrap">
+      <input v-model="title" placeholder="文章标题"></input>
       <textarea ref="myTextarea" ></textarea>
     </div>
   </div>
@@ -96,7 +96,9 @@
       hasImage(article){
         // console.log(article);
         let imgRegex = /<img\s+[^>]*src\s*=\s*"([^>]+?)"/i;
-        return imgRegex.exec(this.getHtml(article))[1]
+        let result = imgRegex.exec(this.getHtml(article))[1]
+        console.log(result)
+        return result
       },
       saveArticle(){
         let html = this.cm.getValue()
@@ -114,7 +116,7 @@
             content: this.$store.state.article.content,
             wordsCount: this.$store.state.article.wordsCount,
             summary: this.$store.state.article.summary,
-            // image: this.hasImage(html)
+            image: this.hasImage(html)
           }
         };
         this.$http.post("http://localhost:8080/api/v1/article/saveArticle", data).then((res) => {
@@ -131,25 +133,29 @@
 
 <style scoped>
   .editor-main{
-    margin: 60px auto;
-    max-width: 900px;
-    /*border-right: .7em solid #f7f7f7;*/
+    height: 100vh;
   }
 
-  .editor-main .el-input__inner{
-    margin: 30px auto;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    font-size: 28px;
-  }
-  .editor-main{
+  .editor-wrap{
+    margin:0 auto;
+    padding-top: 60px;
+    max-width: 900px;
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
   }
 
-  .editor-main pre{
+  .editor-wrap input{
+    height: 60px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #f7f7f7;
+    margin-bottom: 10px;
+    padding-left: 1rem;
+  }
+
+  .editor-wrap pre{
     width: 100%;
   }
 
@@ -173,5 +179,11 @@
 
   a.markdownIt-Anchor{
     display: none;
+  }
+
+  @media screen and (max-width: 1042px) {
+    .editor-main{
+      padding-bottom: 60px;
+    }
   }
 </style>
