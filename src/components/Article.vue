@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="article-main">
     <BaseHeader></BaseHeader>
     <div class="article">
       <article>
@@ -12,7 +12,7 @@
             <span class="name">
               <a href="#" class="name">{{name}}</a>
             </span>
-            <b-badge href="#" variant="info">
+            <b-badge href="#" variant="info" class="concern" v-if="!isSame()">
               <i class="fas fa-plus"></i>
               关注
             </b-badge>
@@ -43,30 +43,43 @@
     },
     data() {
       return {
-        name: "刘钦",
-        title: "Hello world",
-        avatar: "http://wx3.sinaimg.cn/small/006zFO3gly1flf4xnd5q9j30ku0ku75r.jpg",
-        time: "2019-05-10 8:00:00",
-        words_count: 1000,
-        views_count: 2025,
-        comments_count: 3,
-        likes_count: 97
+        name: "",
+        userName: "",
+        userId: "",
+        authorId: "",
+        title: "",
+        avatar: "",
+        time: "",
+        words_count: 0,
+        views_count: 0,
+        comments_count: 0,
+        likes_count: 0
       }
     },
     mounted() {
       var md = require('turpan');
       this.$http.get("http://localhost:8080/api/v1/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
         console.log(res)
-        this.$refs.article.innerHTML = md.render(res.data.content)
-        this.title = res.data.title
-        this.words_count = res.data.wordsCount
-        this.time = this.getTime(res.data.createTime)
+        this.$refs.article.innerHTML = md.render(res.data.article.content)
+        this.title = res.data.article.title
+        this.words_count = res.data.article.wordsCount
+        this.time = this.getTime(res.data.article.createTime)
+        this.name = res.data.authorName
+        this.userId = res.data.userId
+        this.authorId = res.data.authorId
+        this.avatar = res.data.avatar
+        this.views_count = this.$store.state.article.viewsCount
+        this.comments_count = this.$store.state.article.commentsCount
+        this.likes_count = this.$store.state.article.likesCount
       })
     },
     methods: {
       getTime(time = +new Date()) {
         var date = new Date(time + 8 * 3600 * 1000);
         return date.toJSON().substr(0, 19).replace('T', ' ');
+      },
+      isSame(){
+        return this.userId===this.authorId
       }
     }
   }
@@ -83,7 +96,7 @@
 
   }
 
-  .article {
+  .article-main .article {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -105,14 +118,8 @@
     align-items: center;
   }
 
-  .avatar {
-    width: 48px;
-    height: 48px;
-    vertical-align: middle;
-    display: inline-block;
-  }
 
-  .info {
+  .article-main .info {
     display: inline-block;
     margin-left: 8px;
   }
@@ -124,7 +131,8 @@
 
   .meta {
     color: #909090;
-    font-size: 0.875rem;
+    font-size: 12px;
+    padding-top: 5px;
   }
 
   @media screen and (min-width: 700px) {
@@ -144,5 +152,18 @@
     }
   }
 
+  .article-main .avatar{
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  .article-main .concern{
+    /*border: 1px solid #ddd;*/
+    /*border-radius: 40%;*/
+  }
 
 </style>

@@ -13,9 +13,16 @@ const store = new Vuex.Store({
       bookId: "",
       tags: "",
       content: "",
-      wordsCount: "",
+      wordsCount: 0,
       summary: "",
+      viewsCount: 0,
+      commentsCount: 0,
+      likesCount: 0,
+      authorName: ""
     },
+    mode: "home",
+    lastSaveTime: new Date(),
+    userId: "",
     method: {
       saveArticle(){
         let data = {
@@ -63,6 +70,27 @@ const store = new Vuex.Store({
     },
     setArticleSummary(state, summary){
       state.article.summary = summary
+    },
+    setArticleViewsCount(state, viewsCount){
+      state.article.viewsCount = viewsCount
+    },
+    setArticleCommentsCount(state, commentsCount){
+      state.article.commentsCount = commentsCount
+    },
+    setArticleLikesCount(state, likesCount){
+      state.article.likesCount = likesCount
+    },
+    setArticleAuthorName(state, authorName){
+      state.article.authorName = authorName
+    },
+    setMode(state, mode){
+      state.mode = mode
+    },
+    setLastSaveTime(state, lastSaveTime){
+      state.lastSaveTime = lastSaveTime
+    },
+    setUserId(state, userId){
+      state.userId = userId
     }
   }
 })

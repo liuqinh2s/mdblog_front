@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
+import Hot from '@/views/Hot'
 import Editor from '@/components/Editor.vue'
 import BaseHeader from '@/components/BaseHeader'
 import ArticleList from '@/components/ArticleList'
@@ -21,6 +22,11 @@ export default new Router({
       path: '/home',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/hot',
+      name: 'Hot',
+      component: Hot
     },
     {
       path: '/',

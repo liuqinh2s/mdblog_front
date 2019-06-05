@@ -5,11 +5,12 @@
         <div class="wrap-img">
           <a>
             <img
-                 v-if="article.article.image" :src="article.article.image" class="post-img" @click="jumpToArticle(article.article.id)">
+              v-if="article.article.image" :src="article.article.image" class="post-img"
+              @click="jumpToArticle(article)">
           </a>
         </div>
         <div class="content">
-          <a class="title" @click="jumpToArticle(article.article.id)">
+          <a class="title" @click="jumpToArticle(article)">
             {{article.article.title}}
           </a>
           <p class="summary">
@@ -37,13 +38,13 @@
     name: "ArticleList",
     data() {
       return {
-        articles: [
-        ],
+        articles: [],
       }
     },
     components: {
       BaseHeader,
     },
+    props: ['mode'],
     methods: {
       extractContent(s) {
         let span = document.createElement('span');
@@ -56,7 +57,7 @@
       getSummary(article) {
         console.log("66666666");
         console.log(article);
-        return this.extractContent(this.getHtml(article)).substring(0,100)
+        return this.extractContent(this.getHtml(article)).substring(0, 100)
       },
       getArticles() {
         /*接口请求*/
@@ -67,13 +68,33 @@
           // console.log(that.articles)
         })
       },
-      jumpToArticle(articleId){
-        this.$router.push('/article/'+articleId)
+      getHot() {
+        let that = this;
+        this.$http.get('http://localhost:8080/api/v1/article/getHotList').then((res) => {
+          console.log(res);
+          that.articles = res.body;
+          // console.log(that.articles)
+        })
+      },
+      jumpToArticle(article) {
+        console.log(article)
+        this.$store.commit("setArticleViewsCount", article.viewsCount)
+        this.$store.commit("setArticleLikesCount", article.likesCount)
+        this.$store.commit("setArticleCommentsCount", article.commentsCount)
+        this.$store.commit("setArticleAuthorName", article.authorName)
+        this.$router.push('/article/' + article.article.id)
       }
     },
     computed: {},
     mounted() {
-      this.getArticles()
+      console.log(this.mode)
+      if (this.mode === "home") {
+        this.getArticles()
+      }
+      if (this.mode === "hot") {
+        this.getHot()
+      }
+
     }
   }
 </script>
@@ -142,7 +163,7 @@
     color: #b4b4b4;
   }
 
-  .summary{
+  .summary {
     margin: 0 0 8px;
     font-size: 13px;
     line-height: 24px;

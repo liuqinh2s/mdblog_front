@@ -2,8 +2,17 @@
   <div class="editor-main">
     <BaseHeader v-on:save-article="saveArticle"></BaseHeader>
     <div class="editor-wrap">
-      <input v-model="title" placeholder="文章标题"></input>
-      <textarea ref="myTextarea" ></textarea>
+      <div class="title">
+        <input v-model="title" placeholder="文章标题"></input>
+        <div @click="toggleTools()">
+          <i class="fas fa-ellipsis-h"></i>
+        </div>
+      </div>
+      <ul class="tools" v-if="showTools">
+        <li>删除</li>
+        <li>移动</li>
+      </ul>
+      <textarea ref="myTextarea"></textarea>
     </div>
   </div>
 </template>
@@ -22,7 +31,8 @@
         wordsCount: 0,
         summary: "",
         title: "",
-        article: ""
+        articleId: "",
+        showTools: false
       }
     },
     methods: {
@@ -56,8 +66,13 @@
         // });
         // this.cm.hmd.Fold.setStatus("hmdFoldHTML", true);
         this.cm.hmd.Fold._enabled.html = true;
-
-
+        let that = this
+        this.cm.on("change", function (instance, changeObj) {
+          if (new Date().getTime() - that.$store.state.lastSaveTime.getTime() > 10 * 1000){
+            that.saveArticle()
+            that.$store.commit("setLastSaveTime", new Date())
+          }
+        })
         // console.log(this.cm.getOption('hmdFoldHTML'));
         // console.log(this.cm.getOption('hmdFoldEmoji'));
         // var md = require('turpan');
@@ -89,55 +104,79 @@
           console.log(res);
         })
       },
-      getHtml(article){
+      getHtml(article) {
         let md = require('turpan');
         return md.render(article)
       },
-      hasImage(article){
-        // console.log(article);
+      image(article) {
+        console.log(article);
         let imgRegex = /<img\s+[^>]*src\s*=\s*"([^>]+?)"/i;
-        let result = imgRegex.exec(this.getHtml(article))[1]
-        console.log(result)
-        return result
+        let result = imgRegex.exec(this.getHtml(article))
+        return result ? result[1] : null
       },
-      saveArticle(){
-        let html = this.cm.getValue()
+      toggleTools() {
+        this.$nextTick(() => {
+          this.showTools = !this.showTools
+        })
+      },
+      keyListen() {
+        console.log("666")
+      },
+      saveArticle() {
+        let markdown = this.cm.getValue()
+        let md = require('turpan')
+        let raw = md.render(markdown).innerText
+        console.log(raw)
         this.$store.commit("setArticleTitle", this.title)
-        this.$store.commit("setArticleWordsCount", html.length)
-        this.$store.commit("setArticleSummary", html.substring(0, 100))
-        this.$store.commit("setArticleContent", html)
+        this.$store.commit("setArticleWordsCount", raw ? raw.length : 0)
+        this.$store.commit("setArticleSummary", raw ? raw.substring(0, 100) : "")
+        this.$store.commit("setArticleContent", markdown)
         let data = {
           article: {
+            id: this.articleId,
             title: this.$store.state.article.title,
-            createTime: Date.parse( new Date() ).toString(),
-            updateTime: Date.parse( new Date() ).toString(),
+            createTime: Date.parse(new Date()).toString(),
+            updateTime: Date.parse(new Date()).toString(),
             bookId: this.$store.state.article.bookId,
             tags: this.$store.state.article.tags,
             content: this.$store.state.article.content,
             wordsCount: this.$store.state.article.wordsCount,
             summary: this.$store.state.article.summary,
-            image: this.hasImage(html)
+            image: this.image(markdown),
           }
         };
         this.$http.post("http://localhost:8080/api/v1/article/saveArticle", data).then((res) => {
           console.log(res);
         });
+      },
+    },
+    watch: {
+      cm: function (val) {
+        console.log(val.getValue())
       }
     },
     mounted() {
       this.showMd();
       this.$store.commit("setIsEditorMode", true)
+      let data = {
+        userId: this.$store.state.userId
+      }
+      console.log(this.$store.state.userId)
+      this.$http.post("http://localhost:8080/api/v1/article/createArticle", data).then((res)=>{
+        console.log(res)
+        this.articleId = res.bodyText
+      })
     }
   }
 </script>
 
 <style scoped>
-  .editor-main{
+  .editor-main {
     height: 100vh;
   }
 
-  .editor-wrap{
-    margin:0 auto;
+  .editor-wrap {
+    margin: 0 auto;
     padding-top: 60px;
     max-width: 900px;
     display: flex;
@@ -146,16 +185,17 @@
     height: 100%;
   }
 
-  .editor-wrap input{
+  .editor-wrap input {
     height: 60px;
     outline: none;
     border: none;
     border-bottom: 1px solid #f7f7f7;
-    margin-bottom: 10px;
-    padding-left: 1rem;
+    /*margin-bottom: 10px;*/
+    margin-left: 2rem;
+    width: 100%;
   }
 
-  .editor-wrap pre{
+  .editor-wrap pre {
     width: 100%;
   }
 
@@ -164,7 +204,7 @@
     padding: 20px;
   }
 
-  figcaption{
+  figcaption {
     min-width: 20%;
     max-width: 80%;
     min-height: 22px;
@@ -177,12 +217,32 @@
     text-align: center;
   }
 
-  a.markdownIt-Anchor{
+  a.markdownIt-Anchor {
     display: none;
   }
 
+  .editor-main .tools {
+    display: flex;
+    list-style-type: none;
+    justify-content: space-around;
+    padding: 10px;
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .editor-main .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .title svg {
+    margin-right: 1rem;
+    cursor: pointer;
+  }
+
   @media screen and (max-width: 1042px) {
-    .editor-main{
+    .editor-main {
       padding-bottom: 60px;
     }
   }

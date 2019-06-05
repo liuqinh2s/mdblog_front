@@ -12,13 +12,13 @@
     </div>
     <div class="header-center">
       <ul class="nav-list">
-        <li>
+        <li @click="gotoHome">
           <i class="fas fa-hourglass-half"></i>
-          <router-link to="home">首页</router-link>
+          <span>最新</span>
         </li>
-        <li>
+        <li @click="gotoHot">
           <i class="fab fa-hotjar"></i>
-          <a href="#">热门</a>
+          <span>热门</span>
         </li>
         <li>
           <i class="fas fa-tags"></i>
@@ -74,11 +74,17 @@
       login() {
         this.$router.push({path: '/login'})
       },
+      gotoHome(){
+        this.$router.push('/home')
+      },
+      gotoHot(){
+        this.$router.push('/hot')
+      }
     },
     mounted() {
-      this.$http.get("http://localhost:8080/api/v1/user/getAvatar").then((res)=>{
+      this.$http.get("http://localhost:8080/api/v1/user/getUserId").then((res)=>{
         console.log(res);
-        this.avatar = res.bodyText;
+        this.$store.commit("setUserId",res.bodyText);
       });
     },
   }
