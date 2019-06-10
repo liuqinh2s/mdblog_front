@@ -7,7 +7,7 @@
         <span class="parent-dir">返回目录</span>
       </div>
       <div class="title">
-        <input v-model="title" placeholder="无标题"></input>
+        <input v-model="title" placeholder="无标题" class="title-input"></input>
         <div @click="toggleTools()">
           <i class="fas fa-ellipsis-h"></i>
         </div>
@@ -18,6 +18,7 @@
         <li @click="publish" v-if="!isPublished">发表</li>
         <li @click="publishCancel" v-else>取消发表</li>
       </ul>
+      <input v-model="tags" placeholder="给文章分配标签，用分号分隔，如：标签1;标签2" class="tag"></input>
       <textarea ref="myTextarea"></textarea>
     </div>
   </div>
@@ -39,7 +40,8 @@
         title: "",
         articleId: "",
         showTools: false,
-        isPublished: false
+        isPublished: false,
+        tags: ''
       }
     },
     methods: {
@@ -248,7 +250,7 @@
     height: 100%;
   }
 
-  .editor-wrap input {
+  .editor-wrap .title-input {
     height: 60px;
     outline: none;
     border: none;
@@ -302,6 +304,18 @@
   .title svg {
     margin-right: 1rem;
     cursor: pointer;
+  }
+
+  .tag{
+    font-size: 14px;
+    height: 60px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #f7f7f7;
+    /*margin-bottom: 10px;*/
+    padding-left: 2rem;
+    padding-right: 2rem;
+    width: 100%;
   }
 
   @media screen and (max-width: 1042px) {
