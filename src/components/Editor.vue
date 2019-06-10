@@ -3,7 +3,7 @@
     <BaseHeader v-on:save-article="saveArticle"></BaseHeader>
     <div class="editor-wrap">
       <div class="title">
-        <input v-model="title" placeholder="文章标题"></input>
+        <input v-model="title" placeholder="无标题"></input>
         <div @click="toggleTools()">
           <i class="fas fa-ellipsis-h"></i>
         </div>
@@ -67,6 +67,10 @@
         // this.cm.hmd.Fold.setStatus("hmdFoldHTML", true);
         this.cm.hmd.Fold._enabled.html = true;
         let that = this
+        this.$http.get("http://localhost:8080/api/v1/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
+          that.title = res.data.article.title
+          that.cm.setValue(res.data.article.content)
+        })
         this.cm.on("change", function (instance, changeObj) {
           if (new Date().getTime() - that.$store.state.lastSaveTime.getTime() > 10 * 1000){
             that.saveArticle()
@@ -109,7 +113,6 @@
         return md.render(article)
       },
       image(article) {
-        console.log(article);
         let imgRegex = /<img\s+[^>]*src\s*=\s*"([^>]+?)"/i;
         let result = imgRegex.exec(this.getHtml(article))
         return result ? result[1] : null
@@ -122,20 +125,30 @@
       keyListen() {
         console.log("666")
       },
+      extractContent(s) {
+        let span = document.createElement('span');
+        span.innerHTML = s;
+        span.querySelectorAll(".markdownIt-Anchor").forEach(function (entry) {
+          entry.parentNode.removeChild(entry)
+        });
+        return span.textContent || span.innerText;
+      },
+      getHtml(article){
+        let md = require('turpan')
+        return md.render(article)
+      },
       saveArticle() {
         let markdown = this.cm.getValue()
-        let md = require('turpan')
-        let raw = md.render(markdown).innerText
-        console.log(raw)
+        let raw = this.extractContent(this.getHtml(markdown))
         this.$store.commit("setArticleTitle", this.title)
+        console.log(this.title)
         this.$store.commit("setArticleWordsCount", raw ? raw.length : 0)
-        this.$store.commit("setArticleSummary", raw ? raw.substring(0, 100) : "")
+        this.$store.commit("setArticleSummary", raw.substring(0, 100))
         this.$store.commit("setArticleContent", markdown)
         let data = {
           article: {
             id: this.articleId,
-            title: this.$store.state.article.title,
-            createTime: Date.parse(new Date()).toString(),
+            title: this.$store.state.article.title===""?"无标题":this.$store.state.article.title,
             updateTime: Date.parse(new Date()).toString(),
             bookId: this.$store.state.article.bookId,
             tags: this.$store.state.article.tags,
@@ -145,6 +158,7 @@
             image: this.image(markdown),
           }
         };
+        console.log(data)
         this.$http.post("http://localhost:8080/api/v1/article/saveArticle", data).then((res) => {
           console.log(res);
         });
@@ -158,14 +172,7 @@
     mounted() {
       this.showMd();
       this.$store.commit("setIsEditorMode", true)
-      let data = {
-        userId: this.$store.state.userId
-      }
-      console.log(this.$store.state.userId)
-      this.$http.post("http://localhost:8080/api/v1/article/createArticle", data).then((res)=>{
-        console.log(res)
-        this.articleId = res.bodyText
-      })
+      this.articleId = this.$route.params.articleId
     }
   }
 </script>

@@ -22,6 +22,7 @@
     name: "Hot",
     mounted() {
       this.$store.commit("setMode", "hot")
+      this.$store.commit("setIsEditorMode", false)
     }
   }
 </script>

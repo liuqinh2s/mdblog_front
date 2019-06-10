@@ -46,19 +46,6 @@
     },
     props: ['mode'],
     methods: {
-      extractContent(s) {
-        let span = document.createElement('span');
-        span.innerHTML = s;
-        span.querySelectorAll(".markdownIt-Anchor").forEach(function (entry) {
-          entry.parentNode.removeChild(entry)
-        });
-        return span.textContent || span.innerText;
-      },
-      getSummary(article) {
-        console.log("66666666");
-        console.log(article);
-        return this.extractContent(this.getHtml(article)).substring(0, 100)
-      },
       getArticles() {
         /*接口请求*/
         let that = this;

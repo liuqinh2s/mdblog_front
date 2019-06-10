@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 import Hot from '@/views/Hot'
+import Mine from '@/views/Mine'
 import Editor from '@/components/Editor.vue'
 import BaseHeader from '@/components/BaseHeader'
 import ArticleList from '@/components/ArticleList'
@@ -33,7 +34,7 @@ export default new Router({
       redirect: '/home'
     },
     {
-      path: '/editor',
+      path: '/editor/:articleId',
       name: 'Editor',
       component: Editor
     },
@@ -43,7 +44,7 @@ export default new Router({
       component: BaseHeader
     },
     {
-      path: '/articlelist',
+      path: '/article-list',
       name: 'ArticleList',
       component: ArticleList
     },
@@ -51,6 +52,11 @@ export default new Router({
       path: '/article/:articleId',
       name: 'Article',
       component: Article
+    },
+    {
+      path: '/mine',
+      name: 'Mine',
+      component: Mine
     }
   ]
 })

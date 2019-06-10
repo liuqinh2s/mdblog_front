@@ -24,9 +24,9 @@
           <i class="fas fa-tags"></i>
           <a href="#">分类</a>
         </li>
-        <li>
+        <li @click="gotoMine">
           <i class="fas fa-user"></i>
-          <a href="#">我的</a>
+          <span>我的</span>
         </li>
       </ul>
     </div>
@@ -35,10 +35,20 @@
         <i class="fas fa-upload"></i>
         <span>保存</span>
       </div>
-      <router-link to="/editor" v-else>
-        <i class="fas fa-feather"></i>
-        <span>创作</span>
-      </router-link>
+      <div v-else @mouseover="isNew=true" @mouseleave="isNew=false">
+        <i class="fas fa-plus-circle"></i>
+        <span>新建</span>
+        <ul class="new" v-show="isNew">
+          <li>
+            <i class="fas fa-book"></i>
+            <span>新建笔记本</span>
+          </li>
+          <li>
+            <i class="fas fa-feather"></i>
+            <span>新建文章</span>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="header-right">
     </div>
@@ -64,7 +74,8 @@
         avatar: "",
         userPage: "#",
         isLogin: false,
-        isDropdown: false
+        isDropdown: false,
+        isNew: false
       }
     },
     methods: {
@@ -79,13 +90,22 @@
       },
       gotoHot(){
         this.$router.push('/hot')
+      },
+      gotoMine(){
+        this.$router.push('/mine')
+      },
+      gotoEditor(){
+        this.$http.get("http://localhost:8080/api/v1/article/createArticle").then((res)=>{
+          console.log(res)
+          if(res.data==="请先登录"){
+            this.$router.push("/login")
+          }else{
+            this.$router.push("/editor/"+res.bodyText)
+          }
+        })
       }
     },
     mounted() {
-      this.$http.get("http://localhost:8080/api/v1/user/getUserId").then((res)=>{
-        console.log(res);
-        this.$store.commit("setUserId",res.bodyText);
-      });
     },
   }
 
@@ -295,6 +315,12 @@
     outline: none;
   }
 
+  .header-center ul li{
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
   @media screen and (max-width: 1042px) {
     .header-center {
       text-align: center;
@@ -302,6 +328,11 @@
       bottom: 0;
       width: 100%;
       background-color: white;
+      height: 60px;
+    }
+
+    .header-center ul{
+      height: 100%;
     }
 
     .search-icon, .user-icon {
@@ -337,11 +368,23 @@
   }
 
   .add-icon svg {
-    margin-right: 8px;
+    margin-right: 5px;
   }
 
   .search-icon svg {
     margin-right: 8px;
   }
+
+  .header li{
+    list-style-type: none;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .header .new{
+    position: absolute;
+    padding: 0;
+  }
+
 
 </style>
