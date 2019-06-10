@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    isEditorMode: false,
     article: {
       title: "",
       createTime: "",
@@ -21,6 +20,10 @@ const store = new Vuex.Store({
       authorName: ""
     },
     mode: "home",
+    parent: 0,
+    isSub: 0,
+    currentDir: 0,
+    books: [],
     lastSaveTime: new Date(),
     userId: "",
     method: {
@@ -44,8 +47,17 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    setIsEditorMode(state, isEditorMode){
-      state.isEditorMode = isEditorMode
+    setIsSub(state, isSub){
+      state.isSub = isSub
+    },
+    setCurrentDir(state, currentDir){
+      state.currentDir = currentDir
+    },
+    setBooks(state, books){
+      state.books = books
+    },
+    setParent(state, parent){
+      state.parent = parent
     },
     setArticleTitle(state, title){
       state.article.title = title

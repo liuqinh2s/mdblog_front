@@ -12,3 +12,11 @@ export function isPhone(input){
 export function isEmail(input){
     return isMatch(EMAIL_REGEX, input)
 }
+
+export function timeStamp2Date(timestamp) {
+  var time = new Date(timestamp);
+  var y = time.getFullYear();
+  var m = time.getMonth() + 1 < 10 ? '0' + (time.getMonth() + 1) : time.getMonth() + 1;
+  var d = time.getDate() < 10 ? '0' + time.getDate() : time.getDate();
+  return y + "." + m + "." + d
+}

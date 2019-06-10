@@ -2,6 +2,10 @@
   <div class="editor-main">
     <BaseHeader v-on:save-article="saveArticle"></BaseHeader>
     <div class="editor-wrap">
+      <div class="back" @click="back2Mine">
+        <i class="fas fa-angle-left"></i>
+        <span class="parent-dir">返回目录</span>
+      </div>
       <div class="title">
         <input v-model="title" placeholder="无标题"></input>
         <div @click="toggleTools()">
@@ -9,8 +13,10 @@
         </div>
       </div>
       <ul class="tools" v-if="showTools">
-        <li>删除</li>
-        <li>移动</li>
+        <li @click="deleteArticle">删除</li>
+        <li @click="changeDir">移动</li>
+        <li @click="publish" v-if="!isPublished">发表</li>
+        <li @click="publishCancel" v-else>取消发表</li>
       </ul>
       <textarea ref="myTextarea"></textarea>
     </div>
@@ -32,7 +38,8 @@
         summary: "",
         title: "",
         articleId: "",
-        showTools: false
+        showTools: false,
+        isPublished: false
       }
     },
     methods: {
@@ -69,10 +76,11 @@
         let that = this
         this.$http.get("http://localhost:8080/api/v1/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
           that.title = res.data.article.title
+          that.isPublished = res.data.article.isPublished
           that.cm.setValue(res.data.article.content)
         })
         this.cm.on("change", function (instance, changeObj) {
-          if (new Date().getTime() - that.$store.state.lastSaveTime.getTime() > 10 * 1000){
+          if (new Date().getTime() - that.$store.state.lastSaveTime.getTime() > 10 * 1000) {
             that.saveArticle()
             that.$store.commit("setLastSaveTime", new Date())
           }
@@ -95,7 +103,11 @@
           this.HyperMD.switchToHyperMD(this.cm);
           this.flag = true;
         }
-
+      },
+      back2Mine() {
+        this.saveArticle()
+        // this.$store.commit('setParent', this.$store.state.currentDir)
+        this.$router.back()
       },
       showHtml() {
         this.cm.setOption("hmdFoldHTML", {
@@ -133,7 +145,7 @@
         });
         return span.textContent || span.innerText;
       },
-      getHtml(article){
+      getHtml(article) {
         let md = require('turpan')
         return md.render(article)
       },
@@ -148,9 +160,9 @@
         let data = {
           article: {
             id: this.articleId,
-            title: this.$store.state.article.title===""?"无标题":this.$store.state.article.title,
+            title: this.$store.state.article.title === "" ? "无标题" : this.$store.state.article.title,
             updateTime: Date.parse(new Date()).toString(),
-            bookId: this.$store.state.article.bookId,
+            bookId: this.$store.state.parent,
             tags: this.$store.state.article.tags,
             content: this.$store.state.article.content,
             wordsCount: this.$store.state.article.wordsCount,
@@ -163,6 +175,45 @@
           console.log(res);
         });
       },
+      deleteArticle() {
+        let that = this
+        let data = {
+          articleId: this.articleId
+        }
+        this.$http.post("http://localhost:8080/api/v1/article/deleteArticle", data).then((res) => {
+          console.log(res)
+          if (res.data.code === 200) {
+            this.$router.push("/mine")
+          }
+        })
+      },
+      changeDir() {
+        this.$router.push("/move?id="+this.articleId+"&type=article")
+      },
+      publish() {
+        let data = {
+          articleId: this.articleId
+        }
+        this.$http.post("http://localhost:8080/api/v1/article/publish", data).then((res) => {
+          console.log(res)
+          this.showTools=false
+          if(res.data.code===200){
+            this.isPublished=true
+          }
+        })
+      },
+      publishCancel(){
+        let data = {
+          articleId: this.articleId
+        }
+        this.$http.post("http://localhost:8080/api/v1/article/publishCancel", data).then((res) => {
+          console.log(res)
+          if(res.data.code===200){
+            this.isPublished=false
+          }
+          this.showTools=false
+        })
+      }
     },
     watch: {
       cm: function (val) {
@@ -171,7 +222,7 @@
     },
     mounted() {
       this.showMd();
-      this.$store.commit("setIsEditorMode", true)
+      this.$store.commit("setMode", 'editor')
       this.articleId = this.$route.params.articleId
     }
   }
@@ -180,6 +231,11 @@
 <style scoped>
   .editor-main {
     height: 100vh;
+  }
+
+  .editor-main .back {
+    padding: 1rem;
+    cursor: pointer;
   }
 
   .editor-wrap {

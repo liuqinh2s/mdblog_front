@@ -25,7 +25,7 @@
       }
     },
     mounted() {
-      this.$store.commit("setIsEditorMode", false)
+      this.$store.commit("setMode", 'home')
     }
   }
 </script>

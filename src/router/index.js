@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Home from '@/views/Home.vue'
 import Hot from '@/views/Hot'
 import Mine from '@/views/Mine'
+import Move from '@/views/Move'
 import Editor from '@/components/Editor.vue'
 import BaseHeader from '@/components/BaseHeader'
 import ArticleList from '@/components/ArticleList'
@@ -57,6 +58,11 @@ export default new Router({
       path: '/mine',
       name: 'Mine',
       component: Mine
+    },
+    {
+      path: '/move',
+      name: 'Move',
+      component: Move
     }
   ]
 })

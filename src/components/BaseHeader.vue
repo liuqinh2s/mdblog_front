@@ -31,19 +31,19 @@
       </ul>
     </div>
     <div class="add-icon">
-      <div v-if="this.$store.state.isEditorMode" @click="$emit('save-article')">
+      <div v-if="this.$store.state.mode==='editor'" @click="$emit('save-article')">
         <i class="fas fa-upload"></i>
         <span>保存</span>
       </div>
-      <div v-else @mouseover="isNew=true" @mouseleave="isNew=false">
+      <div v-else-if="this.$store.state.mode==='mine'" @mouseover="isNew=true" @mouseleave="isNew=false">
         <i class="fas fa-plus-circle"></i>
         <span>新建</span>
         <ul class="new" v-show="isNew">
-          <li>
+          <li @click="show=true">
             <i class="fas fa-book"></i>
             <span>新建笔记本</span>
           </li>
-          <li>
+          <li @click="gotoEditor">
             <i class="fas fa-feather"></i>
             <span>新建文章</span>
           </li>
@@ -62,6 +62,27 @@
         </b-input-group-append>
       </b-input-group>
     </div>
+    <!-- use the modal component, pass in the prop -->
+    <div class="modal-mask modal-transition" v-if="show">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <div class="modal-header">
+            <span>新建文件夹</span>
+          </div>
+          <div class="modal-body">
+            <input v-model="currentName" class="rename-input" autofocus="autofocus" @keyup.enter="confirm"></input>
+          </div>
+          <div class="modal-footer">
+              <span class="modal-cancel" @click="show=false">
+                取消
+              </span>
+            <span class="modal-confirm" @click="confirm">
+                确定
+              </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -75,7 +96,9 @@
         userPage: "#",
         isLogin: false,
         isDropdown: false,
-        isNew: false
+        isNew: false,
+        show:false,
+        currentName: ""
       }
     },
     methods: {
@@ -85,23 +108,52 @@
       login() {
         this.$router.push({path: '/login'})
       },
-      gotoHome(){
+      gotoHome() {
         this.$router.push('/home')
       },
-      gotoHot(){
+      gotoHot() {
         this.$router.push('/hot')
       },
-      gotoMine(){
-        this.$router.push('/mine')
+      gotoMine() {
+        this.$store.commit('setParent', '0')
+        this.$store.commit('setIsSub', 0)
+        if(this.$store.state.mode==='mine'){
+          this.$router.go(0)
+        }else{
+          this.$router.push('/mine')
+        }
       },
-      gotoEditor(){
-        this.$http.get("http://localhost:8080/api/v1/article/createArticle").then((res)=>{
+      gotoEditor() {
+        this.$store.commit('setCurrentDir', this.$store.state.parent)
+        let data={
+          parentId: this.$store.state.parent
+        }
+        console.log(data)
+        this.$http.post("http://localhost:8080/api/v1/article/createArticle", data).then((res) => {
           console.log(res)
-          if(res.data==="请先登录"){
+          if (res.data === "请先登录") {
             this.$router.push("/login")
-          }else{
-            this.$router.push("/editor/"+res.bodyText)
+          } else {
+            this.$router.push("/editor/" + res.bodyText)
           }
+        })
+      },
+      confirm(){
+        let data={
+          parentId: this.$store.state.parent,
+          bookName: this.currentName
+        }
+        this.$http.post("http://localhost:8080/api/v1/book/createBook", data).then((res)=>{
+          console.log(res)
+          this.show = false
+          let data = {
+            bookId: this.$store.state.parent
+          }
+          this.$http.post("http://localhost:8080/api/v1/book/getSubBooks", data).then((res) => {
+            console.log(res)
+            this.$store.commit('setBooks', res.data)
+          })
+          this.currentName = ""
         })
       }
     },
@@ -216,6 +268,10 @@
     /*list-style-type: none;*/
   }
 
+  .nav-list svg {
+    margin-right: 5px;
+  }
+
 
   .search {
     border: 1px solid #c5c5c5;
@@ -315,7 +371,7 @@
     outline: none;
   }
 
-  .header-center ul li{
+  .header-center ul li {
     height: 100%;
     display: flex;
     align-items: center;
@@ -331,7 +387,7 @@
       height: 60px;
     }
 
-    .header-center ul{
+    .header-center ul {
       height: 100%;
     }
 
@@ -375,16 +431,89 @@
     margin-right: 8px;
   }
 
-  .header li{
+  .header li {
     list-style-type: none;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding: 0.5rem;
   }
 
-  .header .new{
+  .header .new {
     position: absolute;
     padding: 0;
+    margin-left: -3.5rem;
+    background-color: white;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
   }
 
+  .modal-mask {
+    background-color: rgba(0, 0, 0, .5);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    display: table;
+  }
+
+  .modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .modal-container {
+    margin: auto;
+    top: 50%;
+    background-color: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 8px;
+    border-radius: 5px;
+  }
+
+  .modal-header {
+    /*margin-top: 30px;*/
+    /*color:#42b983;*/
+    text-align: center;
+    border-bottom: none;
+  }
+
+  .modal-body {
+    /*margin: 20px 0 40px;*/
+    text-align: center;
+  }
+
+  .modal-default-button {
+    background: #EE4D4D;
+    color: white;
+    border: none;
+    width: 80%;
+    line-height: 20px;
+    height: 30px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .modal-footer {
+    text-align: center;
+    border-top: none;
+  }
+
+  .header .rename-input {
+    border: none;
+    outline: none;
+    border-bottom: 2px #01a0e4 solid;
+    width: 100%;
+  }
+
+  .modal-cancel {
+    margin-right: 1rem;
+    cursor: pointer;
+  }
+
+  .modal-confirm {
+    color: #01a0e4;
+    cursor: pointer;
+  }
 
 </style>
