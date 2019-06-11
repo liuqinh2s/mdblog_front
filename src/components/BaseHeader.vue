@@ -158,6 +158,10 @@
       }
     },
     mounted() {
+      this.$http.get("http://localhost:8080/api/v1/user/getUserId").then((res)=>{
+        console.log(res)
+        this.$store.commit('setUserId', res.bodyText)
+      })
     },
   }
 

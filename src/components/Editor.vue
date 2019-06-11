@@ -18,7 +18,15 @@
         <li @click="publish" v-if="!isPublished">发表</li>
         <li @click="publishCancel" v-else>取消发表</li>
       </ul>
-      <input v-model="tags" placeholder="给文章分配标签，用分号分隔，如：标签1;标签2" class="tag"></input>
+      <div ref="tags" class="tag-container">
+        <input ref="tagInput" v-model="tags" placeholder="给文章分配标签，如要新建标签，按一下enter" class="tag-input"
+               @input="searchTag" @keyup.enter="newTag"></input>
+      </div>
+      <ul v-if="tags" class="search-result">
+        <li v-for="(item,index) in items" @click="addTag(item)">
+          {{item}}
+        </li>
+      </ul>
       <textarea ref="myTextarea"></textarea>
     </div>
   </div>
@@ -41,7 +49,9 @@
         articleId: "",
         showTools: false,
         isPublished: false,
-        tags: ''
+        tags: '',
+        items: [],
+        tagList: []
       }
     },
     methods: {
@@ -78,6 +88,10 @@
         let that = this
         this.$http.get("http://localhost:8080/api/v1/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
           that.title = res.data.article.title
+          if(res.data.article.tags!==null&&res.data.article.tags!==""){
+            that.tagList = res.data.article.tags.split(';').slice(1,)
+            that.showAllTags()
+          }
           that.isPublished = res.data.article.isPublished
           that.cm.setValue(res.data.article.content)
         })
@@ -165,7 +179,6 @@
             title: this.$store.state.article.title === "" ? "无标题" : this.$store.state.article.title,
             updateTime: Date.parse(new Date()).toString(),
             bookId: this.$store.state.parent,
-            tags: this.$store.state.article.tags,
             content: this.$store.state.article.content,
             wordsCount: this.$store.state.article.wordsCount,
             summary: this.$store.state.article.summary,
@@ -190,7 +203,7 @@
         })
       },
       changeDir() {
-        this.$router.push("/move?id="+this.articleId+"&type=article")
+        this.$router.push("/move?id=" + this.articleId + "&type=article")
       },
       publish() {
         let data = {
@@ -198,23 +211,106 @@
         }
         this.$http.post("http://localhost:8080/api/v1/article/publish", data).then((res) => {
           console.log(res)
-          this.showTools=false
-          if(res.data.code===200){
-            this.isPublished=true
+          this.showTools = false
+          if (res.data.code === 200) {
+            this.isPublished = true
           }
         })
       },
-      publishCancel(){
+      publishCancel() {
         let data = {
           articleId: this.articleId
         }
         this.$http.post("http://localhost:8080/api/v1/article/publishCancel", data).then((res) => {
           console.log(res)
-          if(res.data.code===200){
-            this.isPublished=false
+          if (res.data.code === 200) {
+            this.isPublished = false
           }
-          this.showTools=false
+          this.showTools = false
         })
+      },
+      searchTag() {
+        this.$http.get("http://localhost:8080/api/v1/tag/searchTag?keyword=" + this.tags).then((res) => {
+          console.log(res)
+          this.items = res.body
+        })
+      },
+      addTag(item) {
+        let that = this
+        let spanX = document.createElement('span')
+        let span = document.createElement('span');
+        spanX.innerText = '×';
+        spanX.setAttribute("style", "margin-left: 6px;cursor: pointer;")
+        spanX.onclick = function () {
+          that.$refs.tags.removeChild(span)
+          let data = {
+            articleId: that.articleId,
+            tag: item
+          }
+          that.$http.post("http://localhost:8080/api/v1/tag/removeTag", data).then((res) => {
+            console.log(res)
+          })
+        }
+        span.setAttribute("style", "display: inline-block;\n" +
+          "    color: #017e66;\n" +
+          "    background-color: #e7f2ed;\n" +
+          "    font-size: 13px;\n" +
+          "    text-align: center;\n" +
+          "    margin-right: .5rem;\n" +
+          "    padding: 0 6px;\n" +
+          "    height: 22px;\n" +
+          "    line-height: 22px;\n" +
+          "    margin-bottom: 5px;")
+        span.innerHTML = item;
+        span.appendChild(spanX)
+        let data = {
+          articleId: this.articleId,
+          tag: item
+        }
+        this.$http.post("http://localhost:8080/api/v1/tag/addTag", data).then((res) => {
+          console.log(res)
+          if(res.data.code===200){
+            this.$refs.tags.insertBefore(span, this.$refs.tagInput)
+          }
+        })
+        this.tags = ""
+      },
+      showAllTags(){
+        console.log(this.tagList)
+        for(let i=0;i<this.tagList.length;i++){
+          let that = this
+          let spanX = document.createElement('span')
+          let span = document.createElement('span');
+          spanX.innerText = '×';
+          spanX.setAttribute("style", "margin-left: 6px;cursor: pointer;")
+          spanX.onclick = function () {
+            that.$refs.tags.removeChild(span)
+            let data = {
+              articleId: that.articleId,
+              tag: that.tagList[i]
+            }
+            that.$http.post("http://localhost:8080/api/v1/tag/removeTag", data).then((res) => {
+              console.log(res)
+            })
+          }
+          span.setAttribute("style", "display: inline-block;\n" +
+            "    color: #017e66;\n" +
+            "    background-color: #e7f2ed;\n" +
+            "    font-size: 13px;\n" +
+            "    text-align: center;\n" +
+            "    margin-right: .5rem;\n" +
+            "    padding: 0 6px;\n" +
+            "    height: 22px;\n" +
+            "    line-height: 22px;\n" +
+            "    margin-bottom: 5px;")
+          span.innerHTML = this.tagList[i];
+          span.appendChild(spanX)
+          this.$refs.tags.insertBefore(span, this.$refs.tagInput)
+          this.tags = ""
+        }
+      },
+      newTag(){
+        this.addTag(this.tags)
       }
     },
     watch: {
@@ -295,6 +391,10 @@
     font-size: 14px;
   }
 
+  .editor-main .tools li{
+    cursor: pointer;
+  }
+
   .editor-main .title {
     display: flex;
     align-items: center;
@@ -306,16 +406,43 @@
     cursor: pointer;
   }
 
-  .tag{
+  .tag-input {
     font-size: 14px;
     height: 60px;
     outline: none;
     border: none;
-    border-bottom: 1px solid #f7f7f7;
     /*margin-bottom: 10px;*/
+    /*display: inline-block;*/
+    width: 300px;
+  }
+
+  .search-result {
+    margin: 0 2rem 1rem;
+    padding: 0;
+    max-width: 300px;
+    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.18);
+    border-color: #ddd;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+
+  .search-result li {
+    list-style-type: none;
+    font-size: 14px;
+    padding: 0.5rem;
+  }
+
+  .search-result li:hover {
+    color: black;
+    background: #F5F5F5;
+    cursor: pointer;
+  }
+
+  .tag-container {
+    width: 100%;
     padding-left: 2rem;
     padding-right: 2rem;
-    width: 100%;
+    border-bottom: 1px solid #f7f7f7;
   }
 
   @media screen and (max-width: 1042px) {

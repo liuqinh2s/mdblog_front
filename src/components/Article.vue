@@ -26,6 +26,14 @@
           </div>
         </div>
         <div ref="article" class="markdown-body"></div>
+        <Button class="like-active" v-if="liked">
+          <i class="far fa-heart"></i>
+          喜欢
+        </Button>
+        <Button class="like" v-else>
+          <i class="far fa-heart"></i>
+          喜欢
+        </Button>
       </article>
     </div>
   </div>
@@ -53,7 +61,8 @@
         words_count: 0,
         views_count: 0,
         comments_count: 0,
-        likes_count: 0
+        likes_count: 0,
+        liked: true
       }
     },
     mounted() {
@@ -65,7 +74,7 @@
         this.words_count = res.data.article.wordsCount
         this.time = this.getTime(res.data.article.createTime)
         this.name = res.data.authorName
-        this.userId = res.data.userId
+        this.userId = this.$store.state.userId
         this.authorId = res.data.authorId
         this.avatar = res.data.avatar
         this.views_count = this.$store.state.article.viewsCount
@@ -78,8 +87,8 @@
         var date = new Date(time + 8 * 3600 * 1000);
         return date.toJSON().substr(0, 19).replace('T', ' ');
       },
-      isSame(){
-        return this.userId===this.authorId
+      isSame() {
+        return this.userId === this.authorId
       }
     }
   }
@@ -136,24 +145,30 @@
     padding-top: 5px;
   }
 
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: 1042px) {
     article {
       width: 700px;
       padding: 40px 20px;
       margin-top: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   }
 
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 1042px) {
     article {
       padding: 20px 10px;
       margin-top: 60px;
       margin-bottom: 60px;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   }
 
-  .article-main .avatar{
+  .article-main .avatar {
     border: 1px solid #ddd;
     border-radius: 50%;
     width: 48px;
@@ -162,9 +177,31 @@
     display: inline-block;
   }
 
-  .article-main .concern{
+  .article-main .concern {
     /*border: 1px solid #ddd;*/
     /*border-radius: 40%;*/
+  }
+
+  .like{
+    border: 1px solid #F8907A;
+    background-color: white;
+    padding: 5px 20px;
+    border-radius: 8px;
+    color: #F8907A;
+    margin: 0 auto;
+  }
+
+  .like-active{
+    border: 1px solid #F8907A;
+    background-color: #F8907A;
+    padding: 5px 20px;
+    border-radius: 8px;
+    color: white;
+    margin: 0 auto;
+  }
+
+  .markdown-body{
+    padding-bottom: 2rem;
   }
 
 </style>

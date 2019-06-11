@@ -19,6 +19,7 @@ const store = new Vuex.Store({
       likesCount: 0,
       authorName: ""
     },
+    tagList: [],
     mode: "home",
     parent: 0,
     isSub: 0,
@@ -34,7 +35,6 @@ const store = new Vuex.Store({
             createTime: Date.parse( new Date() ).toString(),
             updateTime: Date.parse( new Date() ).toString(),
             bookId: this.$store.state.article.bookId,
-            tags: this.$store.state.article.tags,
             content: this.$store.state.article.content,
             wordsCount: this.$store.state.article.wordsCount,
             summary: this.$store.state.article.summary,
@@ -103,6 +103,16 @@ const store = new Vuex.Store({
     },
     setUserId(state, userId){
       state.userId = userId
+    },
+    setRemoveTag(state, tag){
+      for(let i=0;i<state.tagList.length;i++){
+        if(tagList[i]===tag){
+          state.tagList.splice(i,1)
+        }
+      }
+    },
+    setAddTag(state, tag){
+      state.tagList.splice(state.tagList.length, 1, tag)
     }
   }
 })

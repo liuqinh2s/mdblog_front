@@ -8,15 +8,18 @@
       </h3>
       <el-form v-show="showLogin" :model="ruleForm" :rules="rules" ref="loginForm" class="demo-ruleForm">
         <el-form-item prop="userUnique">
-          <el-input type="text" placeholder="请输入邮箱或手机" v-model="ruleForm.userUnique" @keyup.enter.native="login"></el-input>
+          <el-input type="text" placeholder="请输入邮箱或手机" v-model="ruleForm.userUnique"
+                    @keyup.enter.native="login"></el-input>
         </el-form-item>
         <el-form-item prop="loginPwd">
-          <el-input type="password" placeholder="请输入密码" v-model="ruleForm.loginPwd" @keyup.enter.native="login"></el-input>
+          <el-input type="password" placeholder="请输入密码" v-model="ruleForm.loginPwd"
+                    @keyup.enter.native="login"></el-input>
         </el-form-item>
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item prop="loginImgCode">
-              <el-input type="text" placeholder="请输入图形验证码" v-model="ruleForm.loginImgCode" @keyup.enter.native="login"></el-input>
+              <el-input type="text" placeholder="请输入图形验证码" v-model="ruleForm.loginImgCode"
+                        @keyup.enter.native="login"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -30,7 +33,8 @@
         </el-form-item>
       </el-form>
 
-      <el-form v-show="showRegister" :model="ruleForm" :rules="rules" ref="registerForm" class="demo-ruleForm">
+      <el-form v-show="showRegister" :model="ruleForm" :rules="rules" ref="registerForm" class="demo-ruleForm"
+               v-loading="loading">
         <el-form-item prop="userName">
           <el-input type="text" placeholder="请输入用户名" v-model="ruleForm.userName"></el-input>
         </el-form-item>
@@ -128,16 +132,16 @@
       };
       return {
         ruleForm: {
-          userUnique: "18597945372",
-          loginPwd: "123456",
+          userUnique: "",
+          loginPwd: "",
           loginImgCode: "",
-          userName: "kaga",
-          mobile: "18597945372",
+          userName: "",
+          mobile: "",
           verifyCode: "",
-          registerPwd: "123456",
-          confirmPwd: "123456",
+          registerPwd: "",
+          confirmPwd: "",
           registerImgCode: "",
-          email: "15673114637@163.com"
+          email: ""
         },
         rules: {
           userUnique: [
@@ -190,7 +194,8 @@
         // 按钮上的文字
         codeMsg: '获取验证码',
         imgSrc: "",
-        isRegisterDisabled: false
+        isRegisterDisabled: false,
+        loading: false
       };
     },
     mounted
@@ -206,7 +211,11 @@
     methods: {
       refreshImageCode() {
         let that = this;
-        this.$http({method: 'get', url: 'http://localhost:8080/api/v1//user/imageCode', responseType: "blob"}).then((res) => {
+        this.$http({
+          method: 'get',
+          url: 'http://localhost:8080/api/v1/user/imageCode',
+          responseType: "blob"
+        }).then((res) => {
           console.log(res);
           let blob = new Blob([res.data], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8'})
           that.imgSrc = window.URL.createObjectURL(blob);
@@ -223,7 +232,7 @@
             /*接口请求*/
             that.$http.post('http://localhost:8080/api/v1/user/login', data).then((res) => {
               console.log(res);
-              if(res.data.code===200){
+              if (res.data.code === 200) {
                 this.$router.push("/home")
               }
             });
@@ -238,11 +247,19 @@
             that.isRegisterDisabled = true;
             let sha256 = require("js-sha256").sha256;    //引入sha256库
             let hash = sha256(that.ruleForm.registerPwd);    //hash为加密后的密码
-            let data = {'mobile': that.ruleForm.mobile, 'email': that.ruleForm.email, 'password': hash, 'name': that.ruleForm.userName, 'verifyCode': that.ruleForm.verifyCode}
+            let data = {
+              'mobile': that.ruleForm.mobile,
+              'email': that.ruleForm.email,
+              'password': hash,
+              'name': that.ruleForm.userName,
+              'verifyCode': that.ruleForm.verifyCode
+            }
+            this.loading = true
             /*接口请求*/
             this.$http.post('http://localhost:8080/api/v1/user/register', data).then((res) => {
               console.log(res);
-              if(res.data.code!==200){
+              this.loading = false
+              if (res.data.code !== 200) {
                 that.isRegisterDisabled = false;
               }
               that.$alert(res.data.message, '提示', {
@@ -256,11 +273,11 @@
       }
       ,
       sendVerifyCode() {
-        if(!this.ruleForm.mobile || !isPhone(this.ruleForm.mobile)){
+        if (!this.ruleForm.mobile || !isPhone(this.ruleForm.mobile)) {
           return;
         }
         /*接口请求*/
-        this.$http.post('http://localhost:8080/user/api/v1/verifyCode?mobile='+this.ruleForm.mobile).then((res) => {
+        this.$http.get('http://localhost:8080/api/v1/user/verifyCode?mobile=' + this.ruleForm.mobile).then((res) => {
           console.log(res);
           // 验证码60秒倒计时
           this.codeMsg = "重新发送(" + this.countdown + ")";

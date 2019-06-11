@@ -2,28 +2,30 @@
   <ul class="article-list">
     <li v-for="article in articles">
       <div class="article">
-        <div class="wrap-img">
-          <a>
-            <img
-              v-if="article.article.image" :src="article.article.image" class="post-img"
-              @click="jumpToArticle(article)">
-          </a>
-        </div>
         <div class="content">
           <a class="title" @click="jumpToArticle(article)">
             {{article.article.title}}
           </a>
-          <p class="summary">
-            {{article.article.summary}}
-          </p>
-          <div class="meta">
-            <a class="nick-name" href="#">{{article.authorName}}</a>
-            <span>
+          <div>
+            <div class="wrap-img">
+              <a>
+                <img
+                  v-if="article.article.image" :src="article.article.image" class="post-img"
+                  @click="jumpToArticle(article)">
+              </a>
+            </div>
+            <p class="summary">
+              {{article.article.summary}}
+            </p>
+            <div class="meta">
+              <a class="nick-name" href="#">{{article.authorName}}</a>
+              <span>
               <i class="fas fa-comment-alt"></i> {{article.commentsCount}}
             </span>
-            <span>
+              <span>
               <i class="fas fa-heart"></i> {{article.likesCount}}
             </span>
+            </div>
           </div>
         </div>
       </div>
@@ -112,17 +114,11 @@
   }
 
   .wrap-img {
-    width: 152px;
+    min-width: 152px;
+    max-width: 152px;
     float: right;
     /*margin: 0 0 1em 1em;*/
   }
-
-  /*.article{*/
-  /*  display: flex;*/
-  /*  justify-content: center;*/
-  /*  align-items: center;*/
-  /*  flex-direction: row-reverse;*/
-  /*}*/
 
   .post-img {
     width: 100%;
@@ -165,6 +161,15 @@
 
     .summary {
       font-size: 0.875rem;
+    }
+  }
+
+  @media screen and (min-width: 1042px){
+    .article-list .article{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row-reverse;
     }
   }
 </style>
