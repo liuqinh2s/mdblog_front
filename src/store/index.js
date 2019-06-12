@@ -40,7 +40,7 @@ const store = new Vuex.Store({
             summary: this.$store.state.article.summary,
           }
         };
-        this.$http.post("http://localhost:8080/api/v1/article/saveArticle", data).then((res) => {
+        this.$http.post(ADDRESS+"/article/saveArticle", data).then((res) => {
           console.log(res);
         });
       }

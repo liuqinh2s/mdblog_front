@@ -16,6 +16,14 @@ export default {
     font-size: 1rem;
   }
 
+  button:focus {
+    outline: none;
+  }
+
+  a:focus{
+    outline: none;
+  }
+
 *, *:before, *:after {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;

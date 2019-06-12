@@ -19,6 +19,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import BootstrapVue from 'bootstrap-vue'
+import 'babel-polyfill'
+import ADDRESS from '@/assets/js/common.js'
 
 // import '@/assets/css/vue.css'
 
@@ -29,6 +31,7 @@ fontawesome.library.add(brands)
 Vue.use(VueResource)
 Vue.use(ElementUI)
 Vue.use(BootstrapVue)
+Vue.prototype.ADDRESS = ADDRESS
 
 Vue.directive('highlight',function (el) {
   let blocks = el.querySelectorAll('pre code');

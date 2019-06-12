@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <BaseHeader></BaseHeader>
+    <BaseHeader selected-nav="newNav"></BaseHeader>
     <el-row class="container">
       <div class="main">
-        <ArticleList mode="home"></ArticleList>
+        <ArticleList mode="new"></ArticleList>
       </div>
       <div class="aside"></div>
     </el-row>
@@ -25,7 +25,7 @@
       }
     },
     mounted() {
-      this.$store.commit("setMode", 'home')
+      this.$store.commit("setMode", 'new')
     }
   }
 </script>

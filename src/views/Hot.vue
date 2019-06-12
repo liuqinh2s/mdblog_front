@@ -1,6 +1,6 @@
 <template>
   <div class="hot-main">
-    <BaseHeader></BaseHeader>
+    <BaseHeader selected-nav="hotNav"></BaseHeader>
     <el-row class="container">
       <div class="main">
         <ArticleList mode="hot"></ArticleList>

@@ -5,17 +5,23 @@
       <article>
         <h1 class="title">{{title}}</h1>
         <div class="author">
-          <a class="avatar">
+          <a >
             <img :src="avatar" alt="96" class="avatar">
           </a>
           <div class="info">
             <span class="name">
               <a href="#" class="name">{{name}}</a>
             </span>
-            <b-badge href="#" variant="info" class="concern" v-if="!isSame()">
-              <i class="fas fa-plus"></i>
-              关注
-            </b-badge>
+            <div  v-if="!isSame()" class="concern-div">
+              <b-badge href="#" variant="info" class="concern" v-if="!isDone['concern']" @click="toggleDo('concern',true)">
+                <i class="fas fa-plus"></i>
+                关注
+              </b-badge>
+              <b-badge href="#" variant="success" class="concern" v-else @click="toggleDo('concern',false)">
+                <i class="fas fa-plus"></i>
+                已关注
+              </b-badge>
+            </div>
             <div class="meta">
               <span class="publish-time">{{time}}</span>
               <span class="words-count">字数 {{words_count}}</span>
@@ -26,14 +32,16 @@
           </div>
         </div>
         <div ref="article" class="markdown-body"></div>
-        <Button class="like-active" v-if="liked">
-          <i class="far fa-heart"></i>
-          喜欢
-        </Button>
-        <Button class="like" v-else>
-          <i class="far fa-heart"></i>
-          喜欢
-        </Button>
+        <div v-if="!isAuthor" class="footer-meta">
+          <Button class="like-active" v-if="isDone['like']" @click="toggleDo('like',false)">
+            <i class="far fa-heart"></i>
+            喜欢
+          </Button>
+          <Button class="like" v-else @click="toggleDo('like',true)">
+            <i class="far fa-heart"></i>
+            喜欢
+          </Button>
+        </div>
       </article>
     </div>
   </div>
@@ -62,12 +70,17 @@
         views_count: 0,
         comments_count: 0,
         likes_count: 0,
-        liked: true
+        isAuthor: true,
+        isDone: {
+          "like": false,
+          "concern": false
+        }
       }
     },
     mounted() {
+      console.log(this.ADDRESS)
       var md = require('turpan');
-      this.$http.get("http://localhost:8080/api/v1/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
+      this.$http.get("http://192.168.1.151:8080/api/v1/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
         console.log(res)
         this.$refs.article.innerHTML = md.render(res.data.article.content)
         this.title = res.data.article.title
@@ -76,11 +89,33 @@
         this.name = res.data.authorName
         this.userId = this.$store.state.userId
         this.authorId = res.data.authorId
+        if (this.userId === this.authorId) {
+          this.isAuthor = true
+        } else {
+          this.isAuthor = false
+        }
         this.avatar = res.data.avatar
-        this.views_count = this.$store.state.article.viewsCount
-        this.comments_count = this.$store.state.article.commentsCount
-        this.likes_count = this.$store.state.article.likesCount
+        this.views_count = res.data.viewsCount
+        this.comments_count = res.data.commentsCount
+        this.likes_count = res.data.likesCount
       })
+      let data = [
+        {
+          objectId: this.$route.params.articleId,
+          type: "like",
+        },
+        {
+          objectId: this.authorId,
+          type: "concern"
+        }
+      ]
+      for(let i=0;i<data.length;i++){
+        this.$http.post("http://192.168.1.151:8080/api/v1/article/isDone", data[i]).then((res) => {
+          console.log(res)
+          if(data[i].type==="like")
+          this.isDone[data[i].type] = res.data
+        })
+      }
     },
     methods: {
       getTime(time = +new Date()) {
@@ -89,6 +124,35 @@
       },
       isSame() {
         return this.userId === this.authorId
+      },
+      toggleDo(type, isDo) {
+        let objectId = {
+          "like": this.$route.params.articleId,
+          "concern": this.authorId
+        }
+        let data = {
+          objectId: objectId[type],
+          type: type
+        }
+        let key = ""
+        if(isDo){
+          key = "justDo"
+        }else{
+          key = "cancel"
+        }
+        this.$http.post("http://192.168.1.151:8080/api/v1/article/"+key, data).then((res) => {
+          console.log(res)
+          if (res.data.code === 200) {
+            this.isDone[type] = isDo
+            if(data.type==="like"){
+              if(isDo){
+                this.likes_count++
+              }else{
+                this.likes_count--
+              }
+            }
+          }
+        })
       }
     }
   }
@@ -182,26 +246,42 @@
     /*border-radius: 40%;*/
   }
 
-  .like{
+  .like {
     border: 1px solid #F8907A;
     background-color: white;
     padding: 5px 20px;
     border-radius: 8px;
     color: #F8907A;
     margin: 0 auto;
+    outline: none;
   }
 
-  .like-active{
+  .like-active {
     border: 1px solid #F8907A;
     background-color: #F8907A;
     padding: 5px 20px;
     border-radius: 8px;
     color: white;
     margin: 0 auto;
+    outline: none;
   }
 
-  .markdown-body{
+  .markdown-body {
     padding-bottom: 2rem;
+  }
+
+  .article-main .footer-meta{
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .concern-div{
+    display: inline-block;
+  }
+
+  a.badge-info:focus, a.badge-success:focus{
+    outline: none;
   }
 
 </style>

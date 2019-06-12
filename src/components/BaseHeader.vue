@@ -12,19 +12,19 @@
     </div>
     <div class="header-center">
       <ul class="nav-list">
-        <li @click="gotoHome">
+        <li @click="gotoHome" ref="newNav">
           <i class="fas fa-hourglass-half"></i>
           <span>最新</span>
         </li>
-        <li @click="gotoHot">
+        <li @click="gotoHot" ref="hotNav">
           <i class="fab fa-hotjar"></i>
           <span>热门</span>
         </li>
-        <li>
+        <li @click="gotoTags" ref="tagNav">
           <i class="fas fa-tags"></i>
-          <a href="#">分类</a>
+          <span>分类</span>
         </li>
-        <li @click="gotoMine">
+        <li @click="gotoMine" ref="mineNav">
           <i class="fas fa-user"></i>
           <span>我的</span>
         </li>
@@ -101,6 +101,7 @@
         currentName: ""
       }
     },
+    props: ['selectedNav'],
     methods: {
       toggleMenu() {
 
@@ -123,13 +124,16 @@
           this.$router.push('/mine')
         }
       },
+      gotoTags(){
+        this.$router.push('/tags')
+      },
       gotoEditor() {
         this.$store.commit('setCurrentDir', this.$store.state.parent)
         let data={
           parentId: this.$store.state.parent
         }
         console.log(data)
-        this.$http.post("http://localhost:8080/api/v1/article/createArticle", data).then((res) => {
+        this.$http.post("http://192.168.1.151:8080/api/v1/article/createArticle", data).then((res) => {
           console.log(res)
           if (res.data === "请先登录") {
             this.$router.push("/login")
@@ -143,13 +147,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("http://localhost:8080/api/v1/book/createBook", data).then((res)=>{
+        this.$http.post("http://192.168.1.151:8080/api/v1/book/createBook", data).then((res)=>{
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("http://localhost:8080/api/v1/book/getSubBooks", data).then((res) => {
+          this.$http.post("http://192.168.1.151:8080/api/v1/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })
@@ -158,7 +162,8 @@
       }
     },
     mounted() {
-      this.$http.get("http://localhost:8080/api/v1/user/getUserId").then((res)=>{
+      this.$refs[this.selectedNav].setAttribute("style", "color: black; background: #F5F5F5;")
+      this.$http.get("http://192.168.1.151:8080/api/v1/article/getUserId").then((res)=>{
         console.log(res)
         this.$store.commit('setUserId', res.bodyText)
       })
@@ -338,10 +343,6 @@
     color: black;
     background: #F5F5F5;
     cursor: pointer;
-  }
-
-  button:focus {
-    outline: none;
   }
 
   .user:hover {

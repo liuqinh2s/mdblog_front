@@ -48,42 +48,21 @@
     },
     props: ['mode'],
     methods: {
-      getArticles() {
-        /*接口请求*/
+      getArticles(type) {
         let that = this;
-        this.$http.get('http://localhost:8080/api/v1/article/getArticleList').then((res) => {
+        this.$http.get('http://192.168.1.151:8080/api/v1/article/getArticleList?type='+type).then((res) => {
           console.log(res);
           that.articles = res.body;
-          // console.log(that.articles)
-        })
-      },
-      getHot() {
-        let that = this;
-        this.$http.get('http://localhost:8080/api/v1/article/getHotList').then((res) => {
-          console.log(res);
-          that.articles = res.body;
-          // console.log(that.articles)
         })
       },
       jumpToArticle(article) {
         console.log(article)
-        this.$store.commit("setArticleViewsCount", article.viewsCount)
-        this.$store.commit("setArticleLikesCount", article.likesCount)
-        this.$store.commit("setArticleCommentsCount", article.commentsCount)
-        this.$store.commit("setArticleAuthorName", article.authorName)
         this.$router.push('/article/' + article.article.id)
       }
     },
-    computed: {},
     mounted() {
       console.log(this.mode)
-      if (this.mode === "home") {
-        this.getArticles()
-      }
-      if (this.mode === "hot") {
-        this.getHot()
-      }
-
+      this.getArticles(this.mode)
     }
   }
 </script>

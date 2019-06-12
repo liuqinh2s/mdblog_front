@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/views/Login.vue'
-import Home from '@/views/Home.vue'
+import New from '@/views/New.vue'
 import Hot from '@/views/Hot'
 import Mine from '@/views/Mine'
 import Move from '@/views/Move'
+import Tags from '@/views/Tags'
 import Editor from '@/components/Editor.vue'
 import BaseHeader from '@/components/BaseHeader'
 import ArticleList from '@/components/ArticleList'
@@ -22,8 +23,8 @@ export default new Router({
     },
     {
       path: '/home',
-      name: 'Home',
-      component: Home
+      name: 'New',
+      component: New
     },
     {
       path: '/hot',
@@ -63,6 +64,11 @@ export default new Router({
       path: '/move',
       name: 'Move',
       component: Move
+    },
+    {
+      path: '/tags',
+      name: 'Tags',
+      component: Tags
     }
   ]
 })
