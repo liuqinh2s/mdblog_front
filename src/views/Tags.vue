@@ -45,7 +45,7 @@
     },
     mounted() {
       this.$store.commit('setMode', 'tags')
-      this.$http.get("http://192.168.1.101:8080/api/v1/tag/getAllTags").then((res) => {
+      this.$http.get("http://192.168.1.151:8080/api/v1/tag/getAllTags").then((res) => {
         console.log(res)
         this.tags = res.data
       })

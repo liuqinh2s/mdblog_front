@@ -70,7 +70,7 @@
         let data = {
           bookId: item.id
         }
-        this.$http.post("http://192.168.1.101:8080/api/v1/book/getSubBooks", data).then((res) => {
+        this.$http.post("http://192.168.1.151:8080/api/v1/book/getSubBooks", data).then((res) => {
           console.log(res)
           this.$store.commit('setBooks', res.data)
           this.isSub += 1
@@ -88,7 +88,7 @@
         let data = {
           bookId: this.$store.state.parent,
         }
-        this.$http.post("http://192.168.1.101:8080/api/v1/book/getSupBooks", data).then((res) => {
+        this.$http.post("http://192.168.1.151:8080/api/v1/book/getSupBooks", data).then((res) => {
           console.log(res)
           this.$store.commit('setBooks', res.data)
           this.isSub -= 1
@@ -100,13 +100,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("http://192.168.1.101:8080/api/v1/book/createBook", data).then((res)=>{
+        this.$http.post("http://192.168.1.151:8080/api/v1/book/createBook", data).then((res)=>{
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("http://192.168.1.101:8080/api/v1/book/getSubBooks", data).then((res) => {
+          this.$http.post("http://192.168.1.151:8080/api/v1/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })
@@ -125,7 +125,7 @@
             parentId: this.$store.state.parent
           }
         }
-        this.$http.post("http://192.168.1.101:8080/api/v1/book/changeDir", data).then((res) => {
+        this.$http.post("http://192.168.1.151:8080/api/v1/book/changeDir", data).then((res) => {
           console.log(res)
           this.$store.commit('setParent', this.$store.state.currentDir)
           this.$router.back()
@@ -137,7 +137,7 @@
       let data = {
         bookId: '0'
       }
-      this.$http.post("http://192.168.1.101:8080/api/v1/book/getSubBooks", data).then((res) => {
+      this.$http.post("http://192.168.1.151:8080/api/v1/book/getSubBooks", data).then((res) => {
         console.log(res)
         if (res.data === "请先登录") {
           this.$router.push("/login")

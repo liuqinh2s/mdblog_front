@@ -10,6 +10,7 @@ import Editor from '@/components/Editor.vue'
 import BaseHeader from '@/components/BaseHeader'
 import ArticleList from '@/components/ArticleList'
 import Article from '@/components/Article'
+import Comment from '@/components/Comment'
 
 Vue.use(Router)
 
@@ -69,6 +70,11 @@ export default new Router({
       path: '/tags',
       name: 'Tags',
       component: Tags
+    },
+    {
+      path: '/comment',
+      name: 'Comment',
+      component: Comment
     }
   ]
 })
