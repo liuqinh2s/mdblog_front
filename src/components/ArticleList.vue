@@ -50,7 +50,7 @@
     methods: {
       getArticles(type) {
         let that = this;
-        this.$http.get('http://192.168.1.151:8080/api/v1/article/getArticleList?type='+type).then((res) => {
+        this.$http.get('http://104.129.182.209:8080/api/v1/article/getArticleList?type='+type).then((res) => {
           console.log(res);
           that.articles = res.body;
         })
