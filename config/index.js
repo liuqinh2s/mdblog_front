@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       // "/dev":{
-      //   target: "http://104.129.182.209:8080",
+      //   target: "http://localhost:8080",
       //   changeOrigin: true
       // }
     },
@@ -48,7 +48,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

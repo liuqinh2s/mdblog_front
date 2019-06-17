@@ -133,7 +133,7 @@
           parentId: this.$store.state.parent
         }
         console.log(data)
-        this.$http.post("http://104.129.182.209:8080/api/v1/article/createArticle", data).then((res) => {
+        this.$http.post("http://localhost:8080/article/createArticle", data).then((res) => {
           console.log(res)
           if (res.data === "请先登录") {
             this.$router.push("/login")
@@ -147,13 +147,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("http://104.129.182.209:8080/api/v1/book/createBook", data).then((res)=>{
+        this.$http.post("http://localhost:8080/book/createBook", data).then((res)=>{
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("http://104.129.182.209:8080/api/v1/book/getSubBooks", data).then((res) => {
+          this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })
@@ -165,7 +165,7 @@
       if(this.selectedNav){
         this.$refs[this.selectedNav].setAttribute("style", "color: black; background: #F5F5F5;")
       }
-      this.$http.get("http://104.129.182.209:8080/api/v1/article/getUserId").then((res)=>{
+      this.$http.get("http://localhost:8080/article/getUserId").then((res)=>{
         console.log(res)
         this.$store.commit('setUserId', res.bodyText)
       })

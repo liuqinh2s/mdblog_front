@@ -106,11 +106,11 @@
           content: content
         }
         let that = this
-        this.$http.post("http://104.129.182.209:8080/api/v1/comment/addComment", data).then((res) => {
+        this.$http.post("http://localhost:8080/comment/addComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.commentContent = ""
-            this.$http.get("http://104.129.182.209:8080/api/v1/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$http.get("http://localhost:8080/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               that.items.splice(0, that.items.length)
               that.items = res.data
@@ -121,12 +121,13 @@
       deleteComment(commentId){
         let data={
           userId: this.$store.state.userId,
-          commentId: commentId
+          commentId: commentId,
+          articleId: this.$route.params.articleId,
         }
-        this.$http.post("http://104.129.182.209:8080/api/v1/comment/removeComment", data).then((res) => {
+        this.$http.post("http://localhost:8080/comment/removeComment", data).then((res) => {
           console.log(res)
           if(res.data.code===200){
-            this.$http.get("http://104.129.182.209:8080/api/v1/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$http.get("http://localhost:8080/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               this.items.splice(0, this.items.length)
               this.items = res.data
@@ -139,7 +140,8 @@
       },
       sendSubCommentAt(content, commentId, atUserId) {
         let data = {
-          commentId: commentId,
+          articleId: this.$route.params.articleId,
+          commentParentId: commentId,
           userId: this.$store.state.userId,
           content: content,
           atUserId: atUserId
@@ -147,11 +149,11 @@
         this.showReply = -1
         this.showSubReply = -1
         this.subCommentContent = ""
-        this.$http.post("http://104.129.182.209:8080/api/v1/comment/addComment", data).then((res) => {
+        this.$http.post("http://localhost:8080/comment/addComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.commentContent = ""
-            this.$http.get("http://104.129.182.209:8080/api/v1/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$http.get("http://localhost:8080/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               this.items.splice(0, this.items.length)
               this.items = res.data
@@ -170,7 +172,7 @@
         } else {
           key = "cancel"
         }
-        this.$http.post("http://104.129.182.209:8080/api/v1/article/" + key, data).then((res) => {
+        this.$http.post("http://localhost:8080/article/" + key, data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             if (key === "justDo") {
@@ -201,7 +203,7 @@
       }
     },
     mounted() {
-      this.$http.get("http://104.129.182.209:8080/api/v1/article/getComments?articleId=" + this.articleId).then((res) => {
+      this.$http.get("http://localhost:8080/article/getComments?articleId=" + this.articleId).then((res) => {
         console.log(res)
         this.items = res.data
       })

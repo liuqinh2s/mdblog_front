@@ -20,7 +20,7 @@
             <div class="meta">
               <a class="nick-name" href="#">{{article.authorName}}</a>
               <span>
-              <i class="fas fa-comment-alt"></i> {{article.commentsCount}}
+              <i class="fas fa-comment-alt"></i> {{article.article.commentsCount}}
             </span>
               <span>
               <i class="fas fa-heart"></i> {{article.likesCount}}
@@ -50,7 +50,7 @@
     methods: {
       getArticles(type) {
         let that = this;
-        this.$http.get('http://104.129.182.209:8080/api/v1/article/getArticleList?type='+type).then((res) => {
+        this.$http.get('http://localhost:8080/article/getArticleList?type='+type).then((res) => {
           console.log(res);
           that.articles = res.body;
         })
