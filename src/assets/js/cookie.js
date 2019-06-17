@@ -11,7 +11,6 @@ export function setCookie(cname, cvalue, expire) {
 export function getCookie(cname) {
   let name = cname + "=";
   let ca = document.cookie.split(';');
-  console.log("ca");
   console.log(ca);
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i].trim();

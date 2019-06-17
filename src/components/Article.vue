@@ -52,6 +52,7 @@
   import BaseHeader from '@/components/BaseHeader'
   import Editor from '@/components/Editor.vue'
   import Comment from "./Comment";
+  import {getCookie} from "../assets/js/cookie";
 
   export default {
     name: "Article",
@@ -89,7 +90,7 @@
         this.words_count = res.data.article.wordsCount
         this.time = this.getTime(res.data.article.createTime)
         this.name = res.data.authorName
-        this.userId = this.$store.state.userId
+        this.userId = getCookie("userId")
         this.authorId = res.data.authorId
         if (this.userId === this.authorId) {
           this.isAuthor = true
@@ -100,24 +101,23 @@
         this.views_count = res.data.viewsCount
         this.comments_count = res.data.commentsCount
         this.likes_count = res.data.likesCount
-      })
-      let data = [
-        {
-          objectId: this.$route.params.articleId,
-          type: "like",
-        },
-        {
-          objectId: this.authorId,
-          type: "concern"
+        let data = [
+          {
+            objectId: this.$route.params.articleId,
+            type: "like",
+          },
+          {
+            objectId: this.authorId,
+            type: "concern"
+          }
+        ]
+        for(let i=0;i<data.length;i++){
+          this.$http.post("http://localhost:8080/article/isDone", data[i]).then((res) => {
+            console.log(res)
+            this.isDone[data[i].type] = res.data
+          })
         }
-      ]
-      for(let i=0;i<data.length;i++){
-        this.$http.post("http://localhost:8080/article/isDone", data[i]).then((res) => {
-          console.log(res)
-          if(data[i].type==="like")
-          this.isDone[data[i].type] = res.data
-        })
-      }
+      })
     },
     methods: {
       getTime(time) {

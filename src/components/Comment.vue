@@ -102,7 +102,7 @@
       sendComment(content) {
         let data = {
           articleId: this.$route.params.articleId,
-          userId: this.$store.state.userId,
+          userId: getCookie("userId"),
           content: content
         }
         let that = this
@@ -120,7 +120,7 @@
       },
       deleteComment(commentId){
         let data={
-          userId: this.$store.state.userId,
+          userId: getCookie("userId"),
           commentId: commentId,
           articleId: this.$route.params.articleId,
         }
@@ -142,7 +142,7 @@
         let data = {
           articleId: this.$route.params.articleId,
           commentParentId: commentId,
-          userId: this.$store.state.userId,
+          userId: getCookie("userId"),
           content: content,
           atUserId: atUserId
         }

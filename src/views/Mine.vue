@@ -2,6 +2,7 @@
   <div class="mine-main">
     <BaseHeader selected-nav="mineNav"></BaseHeader>
     <div class="mine-wrap">
+      <Social :user-id="getUserId()"></Social>
       <div class="back" v-if="this.$store.state.isSub>0" @click="back">
         <i class="fas fa-angle-left"></i>
         <span>返回</span>
@@ -69,17 +70,20 @@
 <script>
   import BaseHeader from "../components/BaseHeader";
   import {timeStamp2Date} from "../assets/js/common.js"
+  import Social from "./Social";
+  import {getCookie} from "../assets/js/cookie";
 
   export default {
     name: "Mine",
-    components: {BaseHeader},
+    components: {Social, BaseHeader},
     data() {
       return {
         articles: [],
         selected: -1,
         selectedBook: -1,
         show: false,
-        currentName: ""
+        currentName: "",
+        userId: ""
       }
     },
     methods: {
@@ -255,6 +259,9 @@
       },
       timeStamp2Date(time){
         return timeStamp2Date(time)
+      },
+      getUserId(){
+        return getCookie('userId')
       }
     },
     mounted() {

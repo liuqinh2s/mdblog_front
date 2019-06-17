@@ -88,6 +88,8 @@
 
 <script>
 
+  import {getCookie} from "../assets/js/cookie";
+
   export default {
     name: "BaseHeader",
     data() {
@@ -165,10 +167,6 @@
       if(this.selectedNav){
         this.$refs[this.selectedNav].setAttribute("style", "color: black; background: #F5F5F5;")
       }
-      this.$http.get("http://localhost:8080/article/getUserId").then((res)=>{
-        console.log(res)
-        this.$store.commit('setUserId', res.bodyText)
-      })
     },
   }
 
