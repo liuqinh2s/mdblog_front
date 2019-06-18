@@ -26,7 +26,9 @@ const store = new Vuex.Store({
     currentDir: 0,
     books: [],
     lastSaveTime: new Date(),
+    selectedNav: "newNav",
     userId: "",
+    authorId: "",
     method: {
       saveArticle(){
         let data = {
@@ -113,6 +115,12 @@ const store = new Vuex.Store({
     },
     setAddTag(state, tag){
       state.tagList.splice(state.tagList.length, 1, tag)
+    },
+    setSelectedNav(state, selectedNav){
+      state.selectedNav = selectedNav
+    },
+    setAuthorId(state, authorId){
+      state.authorId = authorId
     }
   }
 })

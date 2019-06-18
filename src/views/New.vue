@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <BaseHeader selected-nav="newNav"></BaseHeader>
+<!--    <BaseHeader selected-nav="newNav"></BaseHeader>-->
     <el-row class="container">
-      <div class="main">
-        <ArticleList mode="new"></ArticleList>
+      <div class="main" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+        <ArticleList :articles="articles"></ArticleList>
       </div>
       <div class="aside"></div>
     </el-row>
@@ -21,11 +21,40 @@
     },
     data() {
       return {
-        name: ''
+        name: '',
+        type: 'new',
+        articles: [],
+        busy: false,
+        count: 0
+      }
+    },
+    methods:{
+      getArticles() {
+        this.$http.get('http://localhost:8080/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
+          console.log(res);
+          this.articles = res.body;
+          this.count++
+        })
+      },
+      loadMore(){
+        this.busy = true;
+        this.$http.get('http://localhost:8080/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
+          console.log(res);
+          if(res.body.length===0){
+            return
+          }
+          for(let i=0;i<res.body.length;i++){
+            this.articles.push(res.body[i]);
+          }
+          this.count++;
+          this.busy = false;
+        })
       }
     },
     mounted() {
-      this.$store.commit("setMode", 'new')
+      // this.getArticles()
+      this.$store.commit("setMode", "new")
+      this.$store.commit("setSelectedNav", "newNav")
     }
   }
 </script>

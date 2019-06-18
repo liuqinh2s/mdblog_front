@@ -1,6 +1,5 @@
 <template>
   <div class="tags-main">
-    <BaseHeader selected-nav="tagNav"></BaseHeader>
     <div class="tags-wrap">
       <ul>
         <li v-for="tag in concerns">
@@ -45,6 +44,7 @@
     },
     mounted() {
       this.$store.commit('setMode', 'tags')
+      this.$store.commit("setSelectedNav", "tagNav")
       this.$http.get("http://localhost:8080/tag/getAllTags").then((res) => {
         console.log(res)
         this.tags = res.data

@@ -4,27 +4,29 @@
       <div class="article">
         <div class="content">
           <a class="title" @click="jumpToArticle(article)">
-            {{article.article.title}}
+            {{article.title}}
           </a>
-          <div>
+          <div class="wrap">
+            <div class="wrap-content">
+              <p class="summary">
+                {{article.summary}}
+              </p>
+              <div class="meta" @click="gotoSocial(article.authorId)">
+                <a class="nick-name" href="#">{{article.authorName}}</a>
+                <span>
+              <i class="fas fa-comment-alt"></i> {{article.commentsCount}}
+            </span>
+                <span>
+              <i class="fas fa-heart"></i> {{article.likesCount}}
+            </span>
+              </div>
+            </div>
             <div class="wrap-img">
               <a>
                 <img
-                  v-if="article.article.image" :src="article.article.image" class="post-img"
+                  v-if="article.image" :src="article.image" class="post-img"
                   @click="jumpToArticle(article)">
               </a>
-            </div>
-            <p class="summary">
-              {{article.article.summary}}
-            </p>
-            <div class="meta">
-              <a class="nick-name" href="#">{{article.authorName}}</a>
-              <span>
-              <i class="fas fa-comment-alt"></i> {{article.article.commentsCount}}
-            </span>
-              <span>
-              <i class="fas fa-heart"></i> {{article.likesCount}}
-            </span>
             </div>
           </div>
         </div>
@@ -40,29 +42,25 @@
     name: "ArticleList",
     data() {
       return {
-        articles: [],
+        // articles: [],
       }
     },
     components: {
       BaseHeader,
     },
-    props: ['mode'],
+    props: ['articles'],
     methods: {
-      getArticles(type) {
-        let that = this;
-        this.$http.get('http://localhost:8080/article/getArticleList?type='+type).then((res) => {
-          console.log(res);
-          that.articles = res.body;
-        })
-      },
       jumpToArticle(article) {
         console.log(article)
-        this.$router.push('/article/' + article.article.id)
-      }
+        this.$router.push('/article/' + article.id)
+      },
+      gotoSocial(authorId){
+        this.$store.commit("setAuthorId", authorId)
+        this.$router.push('/social')
+      },
     },
     mounted() {
-      console.log(this.mode)
-      this.getArticles(this.mode)
+      this.$store.commit("setMode", "articleList")
     }
   }
 </script>
@@ -80,6 +78,7 @@
     border-bottom: 1px solid #f0f0f0;
     word-wrap: break-word;
     list-style-type: none;
+    min-height: 160px;
   }
 
   .title {
@@ -92,10 +91,15 @@
     text-decoration: black;
   }
 
+  .article-list .wrap{
+    display: flex;
+  }
+
   .wrap-img {
     min-width: 152px;
     max-width: 152px;
-    float: right;
+    min-height: 100px;
+    /*float: right;*/
     /*margin: 0 0 1em 1em;*/
   }
 
@@ -130,6 +134,13 @@
     font-size: 13px;
     line-height: 24px;
     color: #999;
+  }
+
+  .article-list .wrap-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 4px;
   }
 
   @media screen and (max-width: 855px) {

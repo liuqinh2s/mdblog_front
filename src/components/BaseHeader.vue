@@ -12,19 +12,19 @@
     </div>
     <div class="header-center">
       <ul class="nav-list">
-        <li @click="gotoHome" ref="newNav">
+        <li @click="gotoHome(0)" ref="nav0">
           <i class="fas fa-hourglass-half"></i>
           <span>最新</span>
         </li>
-        <li @click="gotoHot" ref="hotNav">
+        <li @click="gotoHot(1)" ref="nav1">
           <i class="fab fa-hotjar"></i>
           <span>热门</span>
         </li>
-        <li @click="gotoTags" ref="tagNav">
+        <li @click="gotoTags(2)" ref="nav2">
           <i class="fas fa-tags"></i>
           <span>分类</span>
         </li>
-        <li @click="gotoMine" ref="mineNav">
+        <li @click="gotoMine(3)" ref="nav3">
           <i class="fas fa-user"></i>
           <span>我的</span>
         </li>
@@ -35,7 +35,7 @@
         <i class="fas fa-upload"></i>
         <span>保存</span>
       </div>
-      <div v-else-if="this.$store.state.mode==='mine'" @mouseover="isNew=true" @mouseleave="isNew=false">
+      <div v-else-if="this.$store.state.mode==='book'" @mouseover="isNew=true" @mouseleave="isNew=false">
         <i class="fas fa-plus-circle"></i>
         <span>新建</span>
         <ul class="new" v-show="isNew">
@@ -108,25 +108,36 @@
       toggleMenu() {
 
       },
+      selectNav(index){
+        for(let i=0;i<4;i++){
+          this.$refs["nav"+i.toString()].removeAttribute("style", "color: black;")
+        }
+        this.$refs["nav"+index.toString()].setAttribute("style", "color: black;")
+      },
       login() {
         this.$router.push({path: '/login'})
       },
-      gotoHome() {
+      gotoHome(index) {
+        this.selectNav(index)
         this.$router.push('/home')
       },
-      gotoHot() {
+      gotoHot(index) {
+        this.selectNav(index)
         this.$router.push('/hot')
       },
-      gotoMine() {
+      gotoMine(index) {
+        this.selectNav(index)
         this.$store.commit('setParent', '0')
         this.$store.commit('setIsSub', 0)
-        if(this.$store.state.mode==='mine'){
-          this.$router.go(0)
-        }else{
-          this.$router.push('/mine')
-        }
+        this.$router.push('/mine')
+        // if(this.$store.state.mode==='mine'){
+        //   this.$router.go(0)
+        // }else{
+        //   this.$router.push('/mine')
+        // }
       },
-      gotoTags(){
+      gotoTags(index){
+        this.selectNav(index)
         this.$router.push('/tags')
       },
       gotoEditor() {
@@ -164,9 +175,7 @@
       }
     },
     mounted() {
-      if(this.selectedNav){
-        this.$refs[this.selectedNav].setAttribute("style", "color: black; background: #F5F5F5;")
-      }
+
     },
   }
 
@@ -174,6 +183,10 @@
 </script>
 
 <style scoped>
+
+  .selected-nav{
+    color: black;
+  }
 
   .user {
     height: 100%;
@@ -341,7 +354,7 @@
 
   li:hover {
     color: black;
-    background: #F5F5F5;
+    /*background: #F5F5F5;*/
     cursor: pointer;
   }
 

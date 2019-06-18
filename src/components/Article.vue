@@ -1,16 +1,14 @@
 <template>
   <div class="article-main">
-    <BaseHeader></BaseHeader>
+<!--    <BaseHeader></BaseHeader>-->
     <div class="article">
       <article>
         <h1 class="title">{{title}}</h1>
         <div class="author">
-          <a >
-            <img :src="avatar" alt="96" class="avatar">
-          </a>
+          <img :src="avatar" class="avatar" @click="gotoSocial()">
           <div class="info">
-            <span class="name">
-              <a href="#" class="name">{{name}}</a>
+            <span class="name" @click="gotoSocial()">
+              {{name}}
             </span>
             <div  v-if="!isSame()" class="concern-div">
               <b-badge href="#" variant="info" class="concern" v-if="!isDone['concern']" @click="toggleDo('concern',true)">
@@ -120,6 +118,10 @@
       })
     },
     methods: {
+      gotoSocial(){
+        this.$store.commit("setAuthorId", this.authorId)
+        this.$router.push('/social')
+      },
       getTime(time) {
         let date = new Date(time);
         return date.toLocaleString();
@@ -177,7 +179,7 @@
     align-items: center;
   }
 
-  article img {
+  .markdown-body img {
     max-width: 100%;
     margin: 0 auto;
   }
@@ -188,7 +190,7 @@
     line-height: 1.3;
   }
 
-  .author {
+  .article-main .author {
     margin: 30px 0 40px;
     display: flex;
     align-items: center;
@@ -203,6 +205,7 @@
   .name {
     color: black;
     size: 16px;
+    cursor: pointer;
   }
 
   .meta {
@@ -241,6 +244,7 @@
     height: 48px;
     vertical-align: middle;
     display: inline-block;
+    cursor: pointer;
   }
 
   .article-main .concern {

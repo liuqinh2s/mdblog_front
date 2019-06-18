@@ -51,7 +51,8 @@
         isPublished: false,
         tags: '',
         items: [],
-        tagList: []
+        tagList: [],
+        tagSet: []
       }
     },
     methods: {
@@ -90,6 +91,7 @@
           that.title = res.data.article.title
           if(res.data.article.tags!==null&&res.data.article.tags!==""){
             that.tagList = res.data.article.tags.split(';').slice(1,)
+            that.tagSet = new Set(that.tagList)
             that.showAllTags()
           }
           that.isPublished = res.data.article.isPublished
@@ -161,10 +163,6 @@
         });
         return span.textContent || span.innerText;
       },
-      getHtml(article) {
-        let md = require('turpan')
-        return md.render(article)
-      },
       saveArticle() {
         let markdown = this.cm.getValue()
         let raw = this.extractContent(this.getHtml(markdown))
@@ -183,7 +181,8 @@
             wordsCount: this.$store.state.article.wordsCount,
             summary: this.$store.state.article.summary,
             image: this.image(markdown),
-          }
+          },
+          tagList: Array.from(this.tagSet)
         };
         console.log(data)
         this.$http.post("http://localhost:8080/article/saveArticle", data).then((res) => {
@@ -208,7 +207,7 @@
       publish() {
         let data = {
           articleId: this.articleId,
-          tagList: this.tagList
+          tagList: Array.from(this.tagSet)
         }
         this.$http.post("http://localhost:8080/article/publish", data).then((res) => {
           console.log(res)
@@ -221,7 +220,7 @@
       publishCancel() {
         let data = {
           articleId: this.articleId,
-          tagList: this.tagList
+          tagList: Array.from(this.tagSet)
         }
         this.$http.post("http://localhost:8080/article/publishCancel", data).then((res) => {
           console.log(res)
@@ -238,20 +237,26 @@
         })
       },
       addTag(item) {
+        this.tagSet = new Set(this.tagList)
+        this.tagSet.add(item)
+        console.log(this.tagSet)
         let that = this
         let spanX = document.createElement('span')
         let span = document.createElement('span');
         spanX.innerText = '×';
         spanX.setAttribute("style", "margin-left: 6px;cursor: pointer;")
         spanX.onclick = function () {
+          that.tagSet.delete(item)
+          console.log(that.tagSet)
           that.$refs.tags.removeChild(span)
           let data = {
             articleId: that.articleId,
             tag: item
           }
-          that.$http.post("http://localhost:8080/tag/removeTag", data).then((res) => {
-            console.log(res)
-          })
+          // that.$http.post("http://localhost:8080/tag/removeTag", data).then((res) => {
+          //   console.log("6666666666")
+          //   console.log(res)
+          // })
         }
         span.setAttribute("style", "display: inline-block;\n" +
           "    color: #017e66;\n" +
@@ -269,12 +274,13 @@
           articleId: this.articleId,
           tag: item
         }
-        this.$http.post("http://localhost:8080/tag/addTag", data).then((res) => {
-          console.log(res)
-          if(res.data.code===200){
-            this.$refs.tags.insertBefore(span, this.$refs.tagInput)
-          }
-        })
+        // this.$http.post("http://localhost:8080/tag/addTag", data).then((res) => {
+        //   console.log(res)
+        //   if(res.data.code===200){
+        //     this.$refs.tags.insertBefore(span, this.$refs.tagInput)
+        //   }
+        // })
+        this.$refs.tags.insertBefore(span, this.$refs.tagInput)
         this.tags = ""
       },
       showAllTags(){
@@ -286,14 +292,16 @@
           spanX.innerText = '×';
           spanX.setAttribute("style", "margin-left: 6px;cursor: pointer;")
           spanX.onclick = function () {
+            that.tagSet.delete(that.tagList[i])
+            console.log(that.tagSet)
             that.$refs.tags.removeChild(span)
             let data = {
               articleId: that.articleId,
               tag: that.tagList[i]
             }
-            that.$http.post("http://localhost:8080/tag/removeTag", data).then((res) => {
-              console.log(res)
-            })
+            // that.$http.post("http://localhost:8080/tag/removeTag", data).then((res) => {
+            //   console.log(res)
+            // })
           }
           span.setAttribute("style", "display: inline-block;\n" +
             "    color: #017e66;\n" +

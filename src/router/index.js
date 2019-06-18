@@ -11,6 +11,7 @@ import BaseHeader from '@/components/BaseHeader'
 import ArticleList from '@/components/ArticleList'
 import Article from '@/components/Article'
 import Comment from '@/components/Comment'
+import Social from '@/views/Social'
 
 Vue.use(Router)
 
@@ -75,6 +76,11 @@ export default new Router({
       path: '/comment',
       name: 'Comment',
       component: Comment
-    }
+    },
+    {
+      path: '/social',
+      name: 'Social',
+      component: Social
+    },
   ]
 })
