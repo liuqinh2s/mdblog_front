@@ -32,7 +32,7 @@
     methods:{
       loadMore() {
         this.busy = true;
-        this.$http.get('http://localhost:8080/article/getArticleList?type=' + this.type + '&page=' + this.count).then((res) => {
+        this.$http.get('http://mdblog.club:8080/article/getArticleList?type=' + this.type + '&page=' + this.count).then((res) => {
           console.log(res);
           if (res.body.length === 0) {
             return
@@ -48,7 +48,7 @@
     mounted() {
       // this.getArticles('hot')
       this.$store.commit("setMode", "hot")
-      this.$store.commit("setSelectedNav", "hotNav")
+      this.$store.commit("setSelectedNav", "1")
     }
   }
 </script>
@@ -61,8 +61,6 @@
   }
 
   .main {
-    margin-top: 60px;
-    padding-top: 30px;
     padding-right: 0;
     width: 70%;
   }

@@ -1,51 +1,73 @@
 <template>
   <div class="tags-main">
     <div class="tags-wrap">
-      <ul>
-        <li v-for="tag in concerns">
-          <div class="tag-title">{{tag.tagName}}</div>
-          <div class="info-div">
-            <span class="tag-info">{{tag.concernsCount}}关注</span>
-            <span class="tag-info">{{tag.articlesCount}}文章</span>
-          </div>
-          <div class="button-div">
-            <button>已关注</button>
-          </div>
-        </li>
-      </ul>
+<!--      <ul>-->
+<!--        <li v-for="tag in concerns">-->
+<!--          <div class="tag-title">{{tag.tagName}}</div>-->
+<!--          <div class="info-div">-->
+<!--            <span class="tag-info">{{tag.concernsCount}}关注</span>-->
+<!--            <span class="tag-info">{{tag.articlesCount}}文章</span>-->
+<!--          </div>-->
+<!--          <div class="button-div">-->
+<!--            <button>已关注</button>-->
+<!--          </div>-->
+<!--        </li>-->
+<!--      </ul>-->
 
-      <ul>
+      <ul v-if="!showArticleList">
         <li v-for="tag in tags">
-          <div class="tag-title">{{tag.tagName}}</div>
+          <div class="tag-title" @click="getArticleListByTag(tag.tagName)">{{tag.tagName}}</div>
           <div class="info-div">
-            <span class="tag-info">{{tag.concernsCount}}关注</span>
+<!--            <span class="tag-info">{{tag.concernsCount}}关注</span>-->
             <span class="tag-info">{{tag.articlesCount}}文章</span>
           </div>
-          <div class="button-div">
-            <button>关注</button>
-          </div>
+<!--          <div class="button-div">-->
+<!--            <button>关注</button>-->
+<!--          </div>-->
         </li>
       </ul>
+      <div v-if="showArticleList" @click="goback">
+        <div class="go-back">
+          <i class="fas fa-angle-left"></i>
+          <span>返回</span>
+        </div>
+        <ArticleList :articles="articles"></ArticleList>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   import BaseHeader from "../components/BaseHeader";
+  import ArticleList from '@/components/ArticleList'
 
   export default {
     name: "Tags",
-    components: {BaseHeader},
+    components: {BaseHeader, ArticleList},
     data() {
       return {
         tags: [],
-        concerns: []
+        concerns: [],
+        articles: [],
+        showArticleList: false
+      }
+    },
+    methods:{
+      getArticleListByTag(tag){
+        this.$http.get("http://mdblog.club:8080/tag/getArticleListByTag?tag="+tag).then((res) => {
+          console.log(res)
+          this.articles = res.data
+          this.showArticleList = true
+        })
+      },
+      goback(){
+        this.showArticleList = false
       }
     },
     mounted() {
       this.$store.commit('setMode', 'tags')
-      this.$store.commit("setSelectedNav", "tagNav")
-      this.$http.get("http://localhost:8080/tag/getAllTags").then((res) => {
+      this.$store.commit("setSelectedNav", "2")
+      this.$http.get("http://mdblog.club:8080/tag/getAllTags").then((res) => {
         console.log(res)
         this.tags = res.data
       })
@@ -55,10 +77,14 @@
 
 <style scoped>
   .tags-wrap {
-    padding-top: 60px;
     padding-bottom: 60px;
     margin: 0 auto;
     max-width: 900px;
+  }
+
+  .tags-wrap .go-back{
+    margin: 1rem 0;
+    cursor: pointer;
   }
 
   .tags-wrap .tag-title {
@@ -68,6 +94,7 @@
     display: flex;
     justify-content: center;
     padding: 1rem;
+    cursor: pointer;
   }
 
   .tags-wrap .tag-info {
@@ -77,6 +104,10 @@
 
   .tags-wrap li button {
     display: block;
+  }
+
+  .tags-wrap li{
+    min-height: 100px;
   }
 
   .tags-wrap .info-div {

@@ -1,38 +1,40 @@
 <template>
-  <ul class="article-list">
-    <li v-for="article in articles">
-      <div class="article">
-        <div class="content">
-          <a class="title" @click="jumpToArticle(article)">
-            {{article.title}}
-          </a>
-          <div class="wrap">
-            <div class="wrap-content">
-              <p class="summary">
-                {{article.summary}}
-              </p>
-              <div class="meta" @click="gotoSocial(article.authorId)">
-                <a class="nick-name" href="#">{{article.authorName}}</a>
-                <span>
+  <div ref="articleList">
+    <ul class="article-list">
+      <li v-for="article in articles">
+        <div class="article">
+          <div class="content">
+            <a class="title" @click="jumpToArticle(article)">
+              {{article.title}}
+            </a>
+            <div class="wrap">
+              <div class="wrap-content">
+                <p class="summary">
+                  {{article.summary}}
+                </p>
+                <div class="meta" @click="gotoSocial(article.authorId)">
+                  <a class="nick-name" href="#">{{article.authorName}}</a>
+                  <span>
               <i class="fas fa-comment-alt"></i> {{article.commentsCount}}
             </span>
-                <span>
+                  <span>
               <i class="fas fa-heart"></i> {{article.likesCount}}
             </span>
+                </div>
               </div>
-            </div>
-            <div class="wrap-img">
-              <a>
-                <img
-                  v-if="article.image" :src="article.image" class="post-img"
-                  @click="jumpToArticle(article)">
-              </a>
+              <div class="wrap-img">
+                <a>
+                  <img
+                    v-if="article.image" :src="article.image" class="post-img"
+                    @click="jumpToArticle(article)">
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -56,11 +58,14 @@
       },
       gotoSocial(authorId){
         this.$store.commit("setAuthorId", authorId)
-        this.$router.push('/social')
+        this.$router.push('/social/'+authorId)
       },
     },
     mounted() {
-      this.$store.commit("setMode", "articleList")
+      if(this.$store.state.mode==="search"){
+        this.articles = this.$store.state.articles
+      }
+      // this.$store.commit("setMode", "articleList")
     }
   }
 </script>

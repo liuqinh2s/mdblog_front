@@ -109,6 +109,7 @@
       }
     },
     mounted() {
+      console.log(this.$store.state.authorId)
       if(getCookie('userId')===this.$store.state.authorId){
         this.showItems[0]=true
       }else{
@@ -118,7 +119,7 @@
       let data = {
         userId: this.$store.state.authorId
       }
-      this.$http.post("http://localhost:8080/social/getSocial", data).then((res) => {
+      this.$http.post("http://mdblog.club:8080/social/getSocial", data).then((res) => {
         console.log(res)
         this.articleList = res.data.articleList
         this.concernList = res.data.concernList

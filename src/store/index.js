@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    articles: [],
     article: {
       title: "",
       createTime: "",
@@ -121,6 +122,9 @@ const store = new Vuex.Store({
     },
     setAuthorId(state, authorId){
       state.authorId = authorId
+    },
+    setArticles(state, articles){
+      state.articles = articles
     }
   }
 })

@@ -19,7 +19,7 @@
     },
     mounted() {
       this.$store.commit('setMode', 'book')
-      this.$store.commit("setSelectedNav", "mineNav")
+      // this.$store.commit("setSelectedNav", "3")
     }
   }
 </script>
@@ -54,7 +54,6 @@
   }
 
   .mine-wrap {
-    padding-top: 60px;
     margin: 0 auto;
     max-width: 900px;
     padding-right: 15px;

@@ -78,9 +78,12 @@ export default new Router({
       component: Comment
     },
     {
-      path: '/social',
+      path: '/social/:id',
       name: 'Social',
-      component: Social
+      component: Social,
+      // beforeEnter: (to, from, next) => {
+      //
+      // }
     },
   ]
 })

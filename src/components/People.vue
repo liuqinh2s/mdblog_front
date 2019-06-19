@@ -3,12 +3,11 @@
     <ul>
       <li v-for="item in items">
         <div class="author">
-          <a>
-            <img :src="item.avatarUrl" alt="96" class="avatar">
-          </a>
+            <img :src="item.avatarUrl" alt="96" class="avatar" @click="gotoSocial(item.id)">
           <div class="info">
-        <span class="name">
-          <a href="#" class="name">{{item.name}}</a>
+        <span class="name" @click="gotoSocial(item.id)">
+          {{item.name}}
+<!--          <a :href="'./'+item.id">{{item.name}}</a>-->
         </span>
             <ul class="meta">
               <li>
@@ -43,6 +42,23 @@
   export default {
     name: "people",
     props: ['items'],
+    data(){
+      return{
+
+      }
+    },
+    methods:{
+      gotoSocial(id){
+        this.$store.commit("setAuthorId", id)
+        this.$store.commit('setMode', '')
+        this.$store.commit("setSelectedNav", "")
+        console.log(this.$store.state.selectedNav)
+        this.$router.push('/social/'+id)
+      },
+    },
+    mounted() {
+
+    }
   }
 </script>
 
@@ -93,6 +109,11 @@
     border: 1px solid #ddd;
     border-radius: 50%;
     cursor: pointer;
+  }
+
+  .people-main .name{
+    cursor: pointer;
+    color: #01a0e4;
   }
 
   .people-main .author {

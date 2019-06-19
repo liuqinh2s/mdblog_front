@@ -30,7 +30,7 @@
     },
     methods:{
       getArticles() {
-        this.$http.get('http://localhost:8080/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
+        this.$http.get('http://mdblog.club:8080/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
           console.log(res);
           this.articles = res.body;
           this.count++
@@ -38,7 +38,7 @@
       },
       loadMore(){
         this.busy = true;
-        this.$http.get('http://localhost:8080/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
+        this.$http.get('http://mdblog.club:8080/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
           console.log(res);
           if(res.body.length===0){
             return
@@ -54,7 +54,7 @@
     mounted() {
       // this.getArticles()
       this.$store.commit("setMode", "new")
-      this.$store.commit("setSelectedNav", "newNav")
+      this.$store.commit("setSelectedNav", "0")
     }
   }
 </script>
@@ -67,8 +67,6 @@
   }
 
   .main{
-    margin-top: 60px;
-    padding-top: 30px;
     padding-right: 0;
     width: 70%;
     /*margin: 60px auto;*/
