@@ -86,12 +86,12 @@
         let data = {
           bookId: item.id
         }
-        this.$http.post("http://mdblog.club:8080/book/getSubBooks", data).then((res) => {
+        this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
           console.log(res)
           this.$store.commit('setBooks', res.data)
           this.$store.commit('setIsSub', this.$store.state.isSub + 1)
         })
-        this.$http.post("http://mdblog.club:8080/article/getSubArticles", data).then((res) => {
+        this.$http.post("http://localhost:8080/article/getSubArticles", data).then((res) => {
           console.log(res)
           this.articles = res.data
         })
@@ -103,7 +103,7 @@
         let data = {
           bookId: this.$store.state.parent
         }
-        this.$http.post("http://mdblog.club:8080/book/getSupBooks", data).then((res) => {
+        this.$http.post("http://localhost:8080/book/getSupBooks", data).then((res) => {
           console.log(res)
           this.$store.commit('setBooks', res.data)
           this.$store.commit('setIsSub', this.$store.state.isSub - 1)
@@ -111,7 +111,7 @@
           data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("http://mdblog.club:8080/article/getSubArticles", data).then((res) => {
+          this.$http.post("http://localhost:8080/article/getSubArticles", data).then((res) => {
             console.log(res)
             this.articles = res.data
           })
@@ -144,18 +144,18 @@
         let data = {
           articleId: item.id
         }
-        this.$http.post("http://mdblog.club:8080/article/deleteArticle", data).then((res) => {
+        this.$http.post("http://localhost:8080/article/deleteArticle", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.selected = -1
             data = {
               bookId: that.$store.state.parent
             }
-            this.$http.post("http://mdblog.club:8080/book/getSubBooks", data).then((res) => {
+            this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
               console.log(res)
               this.$store.commit('setBooks', res.data)
             })
-            this.$http.post("http://mdblog.club:8080/article/getSubArticles", data).then((res) => {
+            this.$http.post("http://localhost:8080/article/getSubArticles", data).then((res) => {
               console.log(res)
               this.articles = res.data
             })
@@ -167,18 +167,18 @@
         let data = {
           bookId: item.id
         }
-        this.$http.post("http://mdblog.club:8080/book/deleteBook", data).then((res) => {
+        this.$http.post("http://localhost:8080/book/deleteBook", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.selectedBook = -1
             data = {
               bookId: that.$store.state.parent
             }
-            this.$http.post("http://mdblog.club:8080/book/getSubBooks", data).then((res) => {
+            this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
               console.log(res)
               this.$store.commit('setBooks', res.data)
             })
-            this.$http.post("http://mdblog.club:8080/article/getSubArticles", data).then((res) => {
+            this.$http.post("http://localhost:8080/article/getSubArticles", data).then((res) => {
               console.log(res)
               this.articles = res.data
             })
@@ -192,18 +192,18 @@
             bookId: this.id,
             bookName: this.currentName
           }
-          this.$http.post("http://mdblog.club:8080/book/changeBookName", data).then((res) => {
+          this.$http.post("http://localhost:8080/book/changeBookName", data).then((res) => {
             console.log(res)
             if (res.data.code === 200) {
               this.selectedBook = -1
               data = {
                 bookId: that.$store.state.parent
               }
-              this.$http.post("http://mdblog.club:8080/book/getSubBooks", data).then((res) => {
+              this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
                 console.log(res)
                 this.$store.commit('setBooks', res.data)
               })
-              this.$http.post("http://mdblog.club:8080/article/getSubArticles", data).then((res) => {
+              this.$http.post("http://localhost:8080/article/getSubArticles", data).then((res) => {
                 console.log(res)
                 this.articles = res.data
               })
@@ -214,18 +214,18 @@
             articleId: this.id,
             articleName: this.currentName
           }
-          this.$http.post("http://mdblog.club:8080/article/changeArticleName", data).then((res) => {
+          this.$http.post("http://localhost:8080/article/changeArticleName", data).then((res) => {
             console.log(res)
             if (res.data.code === 200) {
               this.selected = -1
               data = {
                 bookId: that.$store.state.parent
               }
-              this.$http.post("http://mdblog.club:8080/book/getSubBooks", data).then((res) => {
+              this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
                 console.log(res)
                 this.$store.commit('setBooks', res.data)
               })
-              this.$http.post("http://mdblog.club:8080/article/getSubArticles", data).then((res) => {
+              this.$http.post("http://localhost:8080/article/getSubArticles", data).then((res) => {
                 console.log(res)
                 this.articles = res.data
               })
@@ -262,13 +262,13 @@
       let data = {
         bookId: this.$store.state.parent
       }
-      this.$http.post("http://mdblog.club:8080/book/getSubBooks", data).then((res) => {
+      this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
         console.log(res)
         if (res.data === "请先登录") {
           this.$router.push("/login")
         } else {
           this.$store.commit('setBooks', res.data)
-          this.$http.post("http://mdblog.club:8080/article/getSubArticles", data).then((res) => {
+          this.$http.post("http://localhost:8080/article/getSubArticles", data).then((res) => {
             console.log(res)
             this.articles = res.data
           })

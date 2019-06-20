@@ -4,31 +4,25 @@
       <li v-for="article in articles">
         <div class="article">
           <div class="content">
-            <a class="title" @click="jumpToArticle(article)">
+            <div class="title" @click="toArticle(article)">
               {{article.title}}
-            </a>
-            <div class="wrap">
-              <div class="wrap-content">
-                <p class="summary">
-                  {{article.summary}}
-                </p>
-                <div class="meta" @click="gotoSocial(article.authorId)">
-                  <a class="nick-name" href="#">{{article.authorName}}</a>
-                  <span>
-              <i class="fas fa-comment-alt"></i> {{article.commentsCount}}
-            </span>
-                  <span>
-              <i class="fas fa-heart"></i> {{article.likesCount}}
-            </span>
-                </div>
+            </div>
+            <div class="summary">
+              <div class="cover" v-if="article.image">
+                <img :src="article.image" class="post-img" @click="toArticle(article)">
               </div>
-              <div class="wrap-img">
-                <a>
-                  <img
-                    v-if="article.image" :src="article.image" class="post-img"
-                    @click="jumpToArticle(article)">
-                </a>
-              </div>
+              {{article.summary}}
+            </div>
+            <div class="meta">
+              <span class="nick-name" @click="toSocial(article.authorId)">
+                {{article.authorName}}
+              </span>
+              <span>
+                <i class="fas fa-comment-alt"></i> {{article.commentsCount}}
+              </span>
+              <span>
+                <i class="fas fa-heart"></i> {{article.likesCount}}
+              </span>
             </div>
           </div>
         </div>
@@ -52,20 +46,19 @@
     },
     props: ['articles'],
     methods: {
-      jumpToArticle(article) {
+      toArticle(article) {
         console.log(article)
         this.$router.push('/article/' + article.id)
       },
-      gotoSocial(authorId){
+      toSocial(authorId) {
         this.$store.commit("setAuthorId", authorId)
-        this.$router.push('/social/'+authorId)
+        this.$router.push('/social/' + authorId)
       },
     },
     mounted() {
-      if(this.$store.state.mode==="search"){
+      if (this.$store.state.mode === "search") {
         this.articles = this.$store.state.articles
       }
-      // this.$store.commit("setMode", "articleList")
     }
   }
 </script>
@@ -73,7 +66,7 @@
 <style scoped>
   .article-list {
     min-height: 112px;
-    padding: 0;
+    padding: 0.5rem 0;
     margin-bottom: 60px;
   }
 
@@ -86,26 +79,24 @@
     min-height: 160px;
   }
 
+  .article-list .cover{
+    float: right;
+    margin: 0 0 1em 1em;
+  }
+
+  .article-list .post-img{
+    width: 152px;
+    max-height: 152px;
+  }
+
   .title {
     margin: -7px 0 4px;
-    display: inherit;
+    display: inline-block;
     font-size: 18px;
     font-weight: 700;
     line-height: 1.5;
     cursor: pointer;
     text-decoration: black;
-  }
-
-  .article-list .wrap{
-    display: flex;
-  }
-
-  .wrap-img {
-    min-width: 152px;
-    max-width: 152px;
-    min-height: 100px;
-    /*float: right;*/
-    /*margin: 0 0 1em 1em;*/
   }
 
   .post-img {
@@ -122,6 +113,7 @@
   .nick-name {
     margin-right: 10px;
     color: #b4b4b4;
+    cursor: pointer;
   }
 
   .nick-name:hover {
@@ -141,7 +133,13 @@
     color: #999;
   }
 
-  .article-list .wrap-content{
+  .article-list .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .article-list .wrap-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -159,12 +157,11 @@
     }
   }
 
-  @media screen and (min-width: 1042px){
-    .article-list .article{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: row-reverse;
-    }
+  @media screen and (min-width: 1042px) {
+    /*.article-list .article {*/
+    /*  display: flex;*/
+    /*  justify-content: center;*/
+    /*  align-items: center;*/
+    /*}*/
   }
 </style>

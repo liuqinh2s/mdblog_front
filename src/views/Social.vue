@@ -1,51 +1,54 @@
 <template>
-  <div class="social-main">
-    <div class="author">
-      <a>
-        <img :src="avatar" alt="96" class="avatar">
-      </a>
-      <div class="info">
+  <div>
+    <BaseHeader></BaseHeader>
+    <div class="social-main">
+      <div class="author">
+        <a>
+          <img :src="avatar" alt="96" class="avatar">
+        </a>
+        <div class="info">
         <span class="name">
           <a href="#" class="name">{{userName}}</a>
         </span>
-        <ul class="meta">
-          <li>
-            <span class="words-count">{{concernList.length}}</span>
-            <span class="meta-key">关注</span>
-          </li>
-          <li>
-            <span class="words-count">{{fansList.length}}</span>
-            <span class="meta-key">粉丝</span>
-          </li>
-          <li>
-            <span class="words-count">{{articleList.length}}</span>
-            <span class="meta-key">文章</span>
-          </li>
-          <li>
-            <span class="words-count">{{getWordsCount()}}</span>
-            <span class="meta-key">字数</span>
-          </li>
-          <li>
-            <span class="words-count">{{getLikesCount()}}</span>
-            <span class="meta-key">收获喜欢</span>
-          </li>
-        </ul>
+          <ul class="meta">
+            <li>
+              <span class="words-count">{{concernList.length}}</span>
+              <span class="meta-key">关注</span>
+            </li>
+            <li>
+              <span class="words-count">{{fansList.length}}</span>
+              <span class="meta-key">粉丝</span>
+            </li>
+            <li>
+              <span class="words-count">{{articleList.length}}</span>
+              <span class="meta-key">文章</span>
+            </li>
+            <li>
+              <span class="words-count">{{getWordsCount()}}</span>
+              <span class="meta-key">字数</span>
+            </li>
+            <li>
+              <span class="words-count">{{getLikesCount()}}</span>
+              <span class="meta-key">收获喜欢</span>
+            </li>
+          </ul>
+        </div>
       </div>
+      <ul class="nav">
+        <li ref="nav0" class="active" @click="showList(0)" v-show="isMine()">笔记本</li>
+        <li ref="nav1" @click="showList(1, articleList)">文章</li>
+        <li ref="nav2" @click="showList(2, concernList)">关注</li>
+        <li ref="nav3" @click="showList(3, fansList)">粉丝</li>
+      </ul>
+      <div class="book-wrap" v-if="showItems[0]">
+        <Book></Book>
+      </div>
+      <div class="article-wrap" v-if="showItems[1]">
+        <ArticleList :articles="articleList"></ArticleList>
+      </div>
+      <People :items="concernList" v-if="showItems[2]"></People>
+      <People :items="fansList" v-if="showItems[3]"></People>
     </div>
-    <ul class="nav">
-      <li ref="nav0" class="active" @click="showList(0)" v-show="isMine()">笔记本</li>
-      <li ref="nav1" @click="showList(1, articleList)">文章</li>
-      <li ref="nav2" @click="showList(2, concernList)">关注</li>
-      <li ref="nav3" @click="showList(3, fansList)">粉丝</li>
-    </ul>
-    <div class="book-wrap" v-if="showItems[0]">
-      <Book></Book>
-    </div>
-    <div class="article-wrap" v-if="showItems[1]">
-      <ArticleList :articles="articleList"></ArticleList>
-    </div>
-    <People :items="concernList" v-if="showItems[2]"></People>
-    <People :items="fansList" v-if="showItems[3]"></People>
   </div>
 </template>
 
@@ -55,10 +58,11 @@
   import ArticleList from "../components/ArticleList";
   import People from "../components/People";
   import {getCookie} from "../assets/js/cookie";
+  import BaseHeader from "../components/BaseHeader";
 
   export default {
     name: "Social",
-    components: {People, ArticleList, Book},
+    components: {BaseHeader, People, ArticleList, Book},
     data() {
       return {
         userName: "",
@@ -119,7 +123,7 @@
       let data = {
         userId: this.$store.state.authorId
       }
-      this.$http.post("http://mdblog.club:8080/social/getSocial", data).then((res) => {
+      this.$http.post("http://localhost:8080/social/getSocial", data).then((res) => {
         console.log(res)
         this.articleList = res.data.articleList
         this.concernList = res.data.concernList
