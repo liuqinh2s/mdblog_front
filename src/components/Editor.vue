@@ -87,7 +87,7 @@
         // this.cm.hmd.Fold.setStatus("hmdFoldHTML", true);
         this.cm.hmd.Fold._enabled.html = true;
         let that = this
-        this.$http.get("http://localhost:8080/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
+        this.$http.get("http://mdblog.club:80/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
           that.title = res.data.article.title
           if(res.data.article.tags!==null&&res.data.article.tags!==""){
             that.tagList = res.data.article.tags.split(';')
@@ -136,7 +136,7 @@
         console.log(this.cm.getOption('hmdFoldHTML'));
       },
       showBooks() {
-        this.$http.post("http://localhost:8080/article/getAllTopBooks", {userId: "0c037d72-0455-4496-9529-568aed59bd5a"}).then((res) => {
+        this.$http.post("http://mdblog.club:80/article/getAllTopBooks", {userId: "0c037d72-0455-4496-9529-568aed59bd5a"}).then((res) => {
           console.log(res);
         })
       },
@@ -187,7 +187,7 @@
           tagList: Array.from(this.tagSet)
         };
         console.log(data)
-        this.$http.post("http://localhost:8080/article/saveArticle", data).then((res) => {
+        this.$http.post("http://mdblog.club:80/article/saveArticle", data).then((res) => {
           console.log(res);
         });
       },
@@ -196,7 +196,7 @@
         let data = {
           articleId: this.articleId
         }
-        this.$http.post("http://localhost:8080/article/deleteArticle", data).then((res) => {
+        this.$http.post("http://mdblog.club:80/article/deleteArticle", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.$router.push("/mine")
@@ -211,7 +211,7 @@
           articleId: this.articleId,
           tagList: Array.from(this.tagSet)
         }
-        this.$http.post("http://localhost:8080/article/publish", data).then((res) => {
+        this.$http.post("http://mdblog.club:80/article/publish", data).then((res) => {
           console.log(res)
           this.showTools = false
           if (res.data.code === 200) {
@@ -224,7 +224,7 @@
           articleId: this.articleId,
           tagList: Array.from(this.tagSet)
         }
-        this.$http.post("http://localhost:8080/article/publishCancel", data).then((res) => {
+        this.$http.post("http://mdblog.club:80/article/publishCancel", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.isPublished = false
@@ -233,7 +233,7 @@
         })
       },
       searchTag() {
-        this.$http.get("http://localhost:8080/tag/searchTag?keyword=" + this.tags).then((res) => {
+        this.$http.get("http://mdblog.club:80/tag/searchTag?keyword=" + this.tags).then((res) => {
           console.log(res)
           this.items = res.body
         })
@@ -255,7 +255,7 @@
             articleId: that.articleId,
             tag: item
           }
-          // that.$http.post("http://localhost:8080/tag/removeTag", data).then((res) => {
+          // that.$http.post("http://mdblog.club:80/tag/removeTag", data).then((res) => {
           //   console.log("6666666666")
           //   console.log(res)
           // })
@@ -276,7 +276,7 @@
           articleId: this.articleId,
           tag: item
         }
-        // this.$http.post("http://localhost:8080/tag/addTag", data).then((res) => {
+        // this.$http.post("http://mdblog.club:80/tag/addTag", data).then((res) => {
         //   console.log(res)
         //   if(res.data.code===200){
         //     this.$refs.tags.insertBefore(span, this.$refs.tagInput)
@@ -301,7 +301,7 @@
               articleId: that.articleId,
               tag: that.tagList[i]
             }
-            // that.$http.post("http://localhost:8080/tag/removeTag", data).then((res) => {
+            // that.$http.post("http://mdblog.club:80/tag/removeTag", data).then((res) => {
             //   console.log(res)
             // })
           }

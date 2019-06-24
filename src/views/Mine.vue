@@ -13,6 +13,9 @@
     components: {Social, BaseHeader},
     methods: {
       getUserId(){
+        if(getCookie("userId")===""){
+          this.$router.push("/login")
+        }
         this.$store.commit("setAuthorId", getCookie('userId'))
         return getCookie('userId')
       }

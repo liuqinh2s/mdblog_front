@@ -12,11 +12,12 @@ import ArticleList from '@/components/ArticleList'
 import Article from '@/components/Article'
 import Comment from '@/components/Comment'
 import Social from '@/views/Social'
+import Search from '@/views/Search'
 
 Vue.use(Router)
 
 export default new Router({
-  // mode:'history',
+  mode:'history',
   routes: [
     {
       path: '/login',
@@ -81,9 +82,11 @@ export default new Router({
       path: '/social/:id',
       name: 'Social',
       component: Social,
-      // beforeEnter: (to, from, next) => {
-      //
-      // }
+    },
+    {
+      path: '/search/:searchContent',
+      name: 'Search',
+      component: Search,
     },
   ]
 })

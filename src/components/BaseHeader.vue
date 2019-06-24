@@ -1,11 +1,10 @@
 <template>
   <div class="header">
-    <div class="search-icon">
-      <a href="#">
-        <i class="fas fa-search"></i><span>搜索</span>
-      </a>
+    <div class="search-icon" @click="showSearchInput=!showSearchInput">
+      <i class="fas fa-search"></i><span>搜索</span>
     </div>
-    <div class="header-left">
+    <input v-model="searchContent" v-if="showSearchInput" class="search-input" placeholder="输入关键词搜索" autofocus="autofocus" @keyup.enter="search()"></input>
+    <div class="header-left" v-show="!showSearchInput">
       <router-link to="/home" class="logo-link">
         <img src="../assets/logo.png" alt="logo" class="logo">
       </router-link>
@@ -58,7 +57,7 @@
       >
         <b-form-input placeholder="" @keyup.enter.native="search()" v-model="searchContent"></b-form-input>
         <b-input-group-append>
-          <b-button size="sm" text="Button" variant="secondary">搜索</b-button>
+          <b-button size="sm" text="Button" variant="secondary" @click="search()">搜索</b-button>
         </b-input-group-append>
       </b-input-group>
     </div>
@@ -101,17 +100,18 @@
         isNew: false,
         show:false,
         currentName: "",
-        searchContent: ""
+        searchContent: "",
+        showSearchInput: false
       }
     },
     props: ['selectedNav'],
     methods: {
       search(){
-        this.$http.get("http://localhost:8080/article/search?searchContent="+this.searchContent).then((res)=>{
+        this.$http.get("http://mdblog.club:80/article/search?searchContent="+this.searchContent).then((res)=>{
           console.log(res)
           this.$store.commit("setArticles", res.data)
           this.$store.commit("setMode", "search")
-          this.$router.push("/article-list")
+          this.$router.push("/search/"+this.searchContent)
         })
       },
       toggleMenu() {
@@ -155,7 +155,7 @@
           parentId: this.$store.state.parent
         }
         console.log(data)
-        this.$http.post("http://localhost:8080/article/createArticle", data).then((res) => {
+        this.$http.post("http://mdblog.club:80/article/createArticle", data).then((res) => {
           console.log(res)
           if (res.data === "请先登录") {
             this.$router.push("/login")
@@ -169,13 +169,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("http://localhost:8080/book/createBook", data).then((res)=>{
+        this.$http.post("http://mdblog.club:80/book/createBook", data).then((res)=>{
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("http://localhost:8080/book/getSubBooks", data).then((res) => {
+          this.$http.post("http://mdblog.club:80/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })
@@ -202,6 +202,15 @@
 </script>
 
 <style scoped>
+
+  .header .search-input{
+    /*width: 100%;*/
+    border: 1px solid #eee;
+    border-radius: 4px;
+    height: 38px;
+    padding: 5px 10px;
+    width: 200px;
+  }
 
   .selected-nav{
     color: black;
@@ -246,6 +255,7 @@
     width: 100%;
     background-color: white;
     z-index: 1000;
+    align-items: center;
   }
 
   .search-icon, .user-icon {
