@@ -107,7 +107,7 @@
     props: ['selectedNav'],
     methods: {
       search(){
-        this.$http.get("http://mdblog.club:80/article/search?searchContent="+this.searchContent).then((res)=>{
+        this.$http.get("http://mdblog.club:8080/article/search?searchContent="+this.searchContent).then((res)=>{
           console.log(res)
           this.$store.commit("setArticles", res.data)
           this.$store.commit("setMode", "search")
@@ -155,7 +155,7 @@
           parentId: this.$store.state.parent
         }
         console.log(data)
-        this.$http.post("http://mdblog.club:80/article/createArticle", data).then((res) => {
+        this.$http.post("http://mdblog.club:8080/article/createArticle", data).then((res) => {
           console.log(res)
           if (res.data === "请先登录") {
             this.$router.push("/login")
@@ -169,13 +169,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("http://mdblog.club:80/book/createBook", data).then((res)=>{
+        this.$http.post("http://mdblog.club:8080/book/createBook", data).then((res)=>{
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("http://mdblog.club:80/book/getSubBooks", data).then((res) => {
+          this.$http.post("http://mdblog.club:8080/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })

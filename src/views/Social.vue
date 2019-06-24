@@ -35,10 +35,11 @@
         </div>
       </div>
       <ul class="nav">
-        <li ref="nav0" class="active" @click="showList(0)" v-show="isMine()">笔记本</li>
-        <li ref="nav1" @click="showList(1, articleList)">文章</li>
-        <li ref="nav2" @click="showList(2, concernList)">关注</li>
-        <li ref="nav3" @click="showList(3, fansList)">粉丝</li>
+        <li ref="nav0" class="active" @click="changeNav(0)" v-show="isMine()">笔记本</li>
+        <li ref="nav1" @click="changeNav(1)">文章</li>
+        <li ref="nav2" @click="changeNav(2)">关注</li>
+        <li ref="nav3" @click="changeNav(3)">粉丝</li>
+        <li ref="nav4" @click="changeNav(4)" v-show="isMine()">设置</li>
       </ul>
       <div class="book-wrap" v-if="showItems[0]">
         <Book></Book>
@@ -48,6 +49,19 @@
       </div>
       <People :items="concernList" v-if="showItems[2]"></People>
       <People :items="fansList" v-if="showItems[3]"></People>
+      <div v-if="showItems[4]" class="setting">
+        <el-upload
+          class="upload-demo"
+          action="http://mdblog.club:8080/upload/upload"
+          :http-request="upLoad"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="avatar" :src="avatar" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <div slot="tip" class="el-upload__tip">点击头像即可上传，只能上传jpg/png文件，且不超过2Mb</div>
+        </el-upload>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +89,30 @@
     },
     props: ['userId'],
     methods: {
+      upLoad(file) {
+        const formData = new FormData();
+        formData.append('file', file.file);
+        console.log(file);
+        this.$http.post("http://mdblog.club:8080/upload/upload", formData).then((res) => {
+          console.log(res)
+        })
+      },
+      handleAvatarSuccess(res, file) {
+        this.avatar = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isPNG = file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG && !isPNG) {
+          this.$message.error('上传头像图片只能是 JPG 或者 PNG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return (isJPG || isPNG) && isLt2M;
+      },
       getWordsCount() {
         let wordsCount = 0
         for (let i = 0; i < this.articleList.length; i++) {
@@ -89,41 +127,38 @@
         }
         return likesCount
       },
-      changeNav(item){
-        for(let i=0;i<4;i++){
-          if(i!==item){
-            let n = 'nav'+i.toString()
+      changeNav(item) {
+        for (let i = 0; i < 4; i++) {
+          if (i !== item) {
+            let n = 'nav' + i.toString()
             console.log(n)
             this.$refs[n].classList.remove('active')
           }
         }
-        this.$refs['nav'+item].classList.add("active")
-      },
-      showList(item, list) {
-        this.changeNav(item)
+        this.$refs['nav' + item].classList.add("active")
         let len = this.showItems.length
-        this.showItems.splice(0,this.showItems.length)
-        for(let i=0;i<len;i++){
+        this.showItems.splice(0, this.showItems.length)
+        for (let i = 0; i < len; i++) {
           this.showItems[i] = false
         }
-        this.showItems[item]=true
+        this.showItems[item] = true
       },
-      isMine(){
-        return getCookie('userId')===this.$store.state.authorId
+      isMine() {
+        return getCookie('userId') === this.$store.state.authorId
       }
     },
     mounted() {
       console.log(this.$store.state.authorId)
-      if(getCookie('userId')===this.$store.state.authorId){
-        this.showItems[0]=true
-      }else{
+      if (getCookie('userId') === this.$store.state.authorId) {
+        this.showItems[0] = true
+      } else {
         this.$refs['nav1'].classList.add("active")
         this.showItems[1] = true
       }
       let data = {
         userId: this.$store.state.authorId
       }
-      this.$http.post("http://mdblog.club:80/social/getSocial", data).then((res) => {
+      this.$http.post("http://mdblog.club:8080/social/getSocial", data).then((res) => {
         console.log(res)
         this.articleList = res.data.articleList
         this.concernList = res.data.concernList
@@ -137,7 +172,7 @@
 
 <style scoped>
 
-  .social-main{
+  .social-main {
     padding-top: 60px;
     margin: 0 auto;
     max-width: 900px;
@@ -145,7 +180,7 @@
     padding-left: 15px;
   }
 
-  .social-main .author{
+  .social-main .author {
     display: flex;
     align-items: center;
   }
@@ -230,14 +265,53 @@
     }
   }
 
-  .social-main .article-wrap{
+  .social-main .article-wrap {
     margin-top: 1rem;
     padding-left: 8px;
     padding-right: 8px;
   }
 
-  .social-main .book-wrap{
+  .social-main .book-wrap {
     margin-top: 8px;
+  }
+
+  .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .el-upload:hover {
+    border-color: #409EFF;
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+    border-radius: 50%;
+    padding: 1rem;
+  }
+
+  .setting{
+    display: flex;
+    align-items: center;
+  }
+
+  .setting .uploadBtn{
+    height: 32px;
+    margin-left: 100px;
   }
 
   @media screen and (max-width: 1042px) {
