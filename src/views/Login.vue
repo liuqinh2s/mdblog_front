@@ -122,7 +122,7 @@
       };
       let that = this;
       let checkImageCode = function (rule, value, callback) {
-        that.$http.post('http://mdblog.club:8080/user/sendImageCode?imageCode=' + value).then((res) => {
+        that.$http.post('https://mdblog.club/user/sendImageCode?imageCode=' + value).then((res) => {
           console.log(res);
           if (res.data.code !== 200) {
             return callback(new Error(res.data.message));
@@ -213,7 +213,7 @@
         let that = this;
         this.$http({
           method: 'get',
-          url: 'http://mdblog.club:8080/user/imageCode',
+          url: 'https://mdblog.club/user/imageCode',
           responseType: "blob"
         }).then((res) => {
           console.log(res);
@@ -230,7 +230,7 @@
             let hash = sha256(that.ruleForm.loginPwd);    //hash为加密后的密码
             let data = {'mobile': that.ruleForm.userUnique, 'password': hash};
             /*接口请求*/
-            that.$http.post('http://mdblog.club:8080/user/login', data).then((res) => {
+            that.$http.post('https://mdblog.club/user/login', data).then((res) => {
               console.log(res);
               if (res.data.code === 200) {
                 this.$router.push("/home")
@@ -261,7 +261,7 @@
             }
             this.loading = true
             /*接口请求*/
-            this.$http.post('http://mdblog.club:8080/user/register', data).then((res) => {
+            this.$http.post('https://mdblog.club/user/register', data).then((res) => {
               console.log(res);
               this.loading = false
               if (res.data.code !== 200) {
@@ -282,7 +282,7 @@
           return;
         }
         /*接口请求*/
-        this.$http.get('http://mdblog.club:8080/user/verifyCode?mobile=' + this.ruleForm.mobile).then((res) => {
+        this.$http.get('https://mdblog.club/user/verifyCode?mobile=' + this.ruleForm.mobile).then((res) => {
           console.log(res);
           // 验证码60秒倒计时
           this.codeMsg = "重新发送(" + this.countdown + ")";

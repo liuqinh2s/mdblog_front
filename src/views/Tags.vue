@@ -55,7 +55,7 @@
     },
     methods:{
       getArticleListByTag(tag){
-        this.$http.get("http://mdblog.club:8080/tag/getArticleListByTag?tag="+tag).then((res) => {
+        this.$http.get("https://mdblog.club/tag/getArticleListByTag?tag="+tag).then((res) => {
           console.log(res)
           this.articles = res.data
           this.showArticleList = true
@@ -68,7 +68,7 @@
     mounted() {
       this.$store.commit('setMode', 'tags')
       this.$store.commit("setSelectedNav", "2")
-      this.$http.get("http://mdblog.club:8080/tag/getAllTags").then((res) => {
+      this.$http.get("https://mdblog.club/tag/getAllTags").then((res) => {
         console.log(res)
         this.tags = res.data
       })

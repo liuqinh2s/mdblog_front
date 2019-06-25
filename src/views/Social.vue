@@ -52,7 +52,7 @@
       <div v-if="showItems[4]" class="setting">
         <el-upload
           class="upload-demo"
-          action="http://mdblog.club:8080/upload/upload"
+          action="https://mdblog.club/upload/upload"
           :http-request="upLoad"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
@@ -93,7 +93,7 @@
         const formData = new FormData();
         formData.append('file', file.file);
         console.log(file);
-        this.$http.post("http://mdblog.club:8080/upload/upload", formData).then((res) => {
+        this.$http.post("https://mdblog.club/upload/upload", formData).then((res) => {
           console.log(res)
         })
       },
@@ -158,7 +158,7 @@
       let data = {
         userId: this.$store.state.authorId
       }
-      this.$http.post("http://mdblog.club:8080/social/getSocial", data).then((res) => {
+      this.$http.post("https://mdblog.club/social/getSocial", data).then((res) => {
         console.log(res)
         this.articleList = res.data.articleList
         this.concernList = res.data.concernList
