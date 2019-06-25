@@ -28,6 +28,7 @@ const store = new Vuex.Store({
     books: [],
     lastSaveTime: new Date(),
     selectedNav: "newNav",
+    navIndex: 0,
     userId: "",
     authorId: "",
     method: {
@@ -125,6 +126,9 @@ const store = new Vuex.Store({
     },
     setArticles(state, articles){
       state.articles = articles
+    },
+    setNavIndex(state, navIndex){
+      state.navIndex = navIndex
     }
   }
 })

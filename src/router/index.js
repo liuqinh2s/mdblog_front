@@ -18,6 +18,7 @@ Vue.use(Router)
 
 export default new Router({
   mode:'history',
+  // base: '/blog/',
   routes: [
     {
       path: '/login',
@@ -25,7 +26,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/home',
+      path: '/',
       name: 'New',
       component: New
     },
@@ -33,10 +34,6 @@ export default new Router({
       path: '/hot',
       name: 'Hot',
       component: Hot
-    },
-    {
-      path: '/',
-      redirect: '/home'
     },
     {
       path: '/editor/:articleId',

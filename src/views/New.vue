@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <BaseHeader></BaseHeader>
+    <BaseHeader selected-nav="0"></BaseHeader>
     <el-row class="container">
       <div class="main" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
         <ArticleList :articles="articles"></ArticleList>
@@ -54,7 +54,7 @@
     mounted() {
       // this.getArticles()
       this.$store.commit("setMode", "new")
-      this.$store.commit("setSelectedNav", "0")
+      // this.$store.commit("setSelectedNav", "0")
     }
   }
 </script>

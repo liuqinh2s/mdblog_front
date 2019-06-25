@@ -1,6 +1,6 @@
 <template>
   <div class="tags-main">
-    <BaseHeader></BaseHeader>
+    <BaseHeader selected-nav="2"></BaseHeader>
     <div class="tags-wrap">
 <!--      <ul>-->
 <!--        <li v-for="tag in concerns">-->

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BaseHeader></BaseHeader>
+    <BaseHeader selected-nav="3"></BaseHeader>
     <div class="social-main">
       <div class="author">
         <a>

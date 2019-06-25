@@ -1,23 +1,20 @@
 <template>
   <div class="editor-main">
-    <BaseHeader v-on:save-article="saveArticle"></BaseHeader>
     <div class="editor-wrap">
-      <div class="back" @click="back2Mine">
-        <i class="fas fa-angle-left"></i>
-        <span class="parent-dir">返回目录</span>
-      </div>
       <div class="title">
         <input v-model="title" placeholder="无标题" class="title-input"></input>
-        <div @click="toggleTools()">
+        <div @click="toggleTools()" class="menu">
           <i class="fas fa-ellipsis-h"></i>
+          <ul class="tools" v-if="showTools">
+            <li @click="back2Mine">返回目录</li>
+            <li @click="saveArticle">保存</li>
+            <li @click="deleteArticle">删除</li>
+            <li @click="changeDir">移动</li>
+            <li @click="publish" v-if="!isPublished">发表</li>
+            <li @click="publishCancel" v-else>取消发表</li>
+          </ul>
         </div>
       </div>
-      <ul class="tools" v-if="showTools">
-        <li @click="deleteArticle">删除</li>
-        <li @click="changeDir">移动</li>
-        <li @click="publish" v-if="!isPublished">发表</li>
-        <li @click="publishCancel" v-else>取消发表</li>
-      </ul>
       <div ref="tags" class="tag-container">
         <input ref="tagInput" v-model="tags" placeholder="给文章分配标签，如要新建标签，按一下enter" class="tag-input"
                @input="searchTag" @keyup.enter="newTag"></input>
@@ -344,6 +341,11 @@
     height: 100vh;
   }
 
+  .editor-main .menu{
+    position: absolute;
+    right: 1rem;
+  }
+
   .editor-main .back {
     padding: 1rem;
     cursor: pointer;
@@ -351,7 +353,7 @@
 
   .editor-wrap {
     margin: 0 auto;
-    padding-top: 60px;
+    /*padding-top: 60px;*/
     max-width: 900px;
     display: flex;
     flex-direction: column;
@@ -396,16 +398,25 @@
   }
 
   .editor-main .tools {
+    position: absolute;
     display: flex;
+    flex-direction: column;
     list-style-type: none;
     justify-content: space-around;
     padding: 10px;
     margin: 0;
     font-size: 14px;
+    width: 100px;
+    right: 1rem;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.35);
+    border-radius: 3px;
   }
 
   .editor-main .tools li{
     cursor: pointer;
+    padding: 5px 10px;
   }
 
   .editor-main .title {
@@ -460,7 +471,7 @@
 
   @media screen and (max-width: 1042px) {
     .editor-main {
-      padding-bottom: 60px;
+      /*padding-bottom: 60px;*/
     }
   }
 </style>

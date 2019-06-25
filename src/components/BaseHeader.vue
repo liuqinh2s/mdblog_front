@@ -1,9 +1,11 @@
 <template>
   <div class="header">
+    <!--    移动端搜索小图标-->
     <div class="search-icon" @click="showSearchInput=!showSearchInput">
       <i class="fas fa-search"></i><span>搜索</span>
     </div>
-    <input v-model="searchContent" v-if="showSearchInput" class="search-input" placeholder="输入关键词搜索" autofocus="autofocus" @keyup.enter="search()"></input>
+    <input v-model="searchContent" v-if="showSearchInput" class="search-input" placeholder="输入关键词搜索"
+           autofocus="autofocus" @keyup.enter="search()"></input>
     <div class="header-left" v-show="!showSearchInput">
       <router-link to="/home" class="logo-link">
         <img src="../assets/logo.png" alt="logo" class="logo">
@@ -11,21 +13,25 @@
     </div>
     <div class="header-center">
       <ul class="nav-list">
-        <li @click="gotoHome(0)" ref="nav0">
-          <i class="fas fa-hourglass-half"></i>
-          <span>最新</span>
+        <li ref="nav0">
+          <router-link to="/">
+            <i class="fas fa-hourglass-half"></i><span>最新</span>
+          </router-link>
         </li>
-        <li @click="gotoHot(1)" ref="nav1">
-          <i class="fab fa-hotjar"></i>
-          <span>热门</span>
+        <li ref="nav1">
+          <router-link to="/hot">
+            <i class="fab fa-hotjar"></i><span>热门</span>
+          </router-link>
         </li>
-        <li @click="gotoTags(2)" ref="nav2">
-          <i class="fas fa-tags"></i>
-          <span>分类</span>
+        <li ref="nav2">
+          <router-link to="/tags">
+            <i class="fas fa-tags"></i><span>分类</span>
+          </router-link>
         </li>
-        <li @click="gotoMine(3)" ref="nav3">
-          <i class="fas fa-user"></i>
-          <span>我的</span>
+        <li ref="nav3">
+          <router-link to="/mine">
+            <i class="fas fa-user"></i><span>我的</span>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -98,7 +104,7 @@
         isLogin: false,
         isDropdown: false,
         isNew: false,
-        show:false,
+        show: false,
         currentName: "",
         searchContent: "",
         showSearchInput: false
@@ -106,22 +112,22 @@
     },
     props: ['selectedNav'],
     methods: {
-      search(){
-        this.$http.get("http://mdblog.club:8080/article/search?searchContent="+this.searchContent).then((res)=>{
+      search() {
+        this.$http.get("http://mdblog.club:8080/article/search?searchContent=" + this.searchContent).then((res) => {
           console.log(res)
           this.$store.commit("setArticles", res.data)
           this.$store.commit("setMode", "search")
-          this.$router.push("/search/"+this.searchContent)
+          this.$router.push("/search/" + this.searchContent)
         })
       },
       toggleMenu() {
 
       },
-      selectNav(index){
-        for(let i=0;i<4;i++){
-          this.$refs["nav"+i.toString()].removeAttribute("style", "color: black;")
+      selectNav(index) {
+        for (let i = 0; i < 4; i++) {
+          this.$refs["nav" + i.toString()].removeAttribute("style", "color: black;")
         }
-        this.$refs["nav"+index.toString()].setAttribute("style", "color: black;")
+        this.$refs["nav" + index.toString()].setAttribute("style", "color: black;")
       },
       login() {
         this.$router.push({path: '/login'})
@@ -145,13 +151,13 @@
         //   this.$router.push('/mine')
         // }
       },
-      gotoTags(index){
+      gotoTags(index) {
         this.selectNav(index)
         this.$router.push('/tags')
       },
       gotoEditor() {
         this.$store.commit('setCurrentDir', this.$store.state.parent)
-        let data={
+        let data = {
           parentId: this.$store.state.parent
         }
         console.log(data)
@@ -164,12 +170,12 @@
           }
         })
       },
-      confirm(){
-        let data={
+      confirm() {
+        let data = {
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("http://mdblog.club:8080/book/createBook", data).then((res)=>{
+        this.$http.post("http://mdblog.club:8080/book/createBook", data).then((res) => {
           console.log(res)
           this.show = false
           let data = {
@@ -184,7 +190,8 @@
       }
     },
     mounted() {
-
+      console.log(this.selectedNav)
+      this.selectNav(this.selectedNav)
     },
     // watch: {
     //   '$store.state.selectedNav':function (old, val) {
@@ -203,7 +210,7 @@
 
 <style scoped>
 
-  .header .search-input{
+  .header .search-input {
     /*width: 100%;*/
     border: 1px solid #eee;
     border-radius: 4px;
@@ -212,7 +219,7 @@
     width: 200px;
   }
 
-  .selected-nav{
+  .selected-nav {
     color: black;
   }
 

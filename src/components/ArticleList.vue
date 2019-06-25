@@ -67,7 +67,7 @@
   .article-list {
     min-height: 112px;
     margin-bottom: 60px;
-    padding: 0.5rem 0;
+    padding: 1rem 0;
     /*max-width: 1032px;*/
     /*width: 100%;*/
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="hot-main">
-    <BaseHeader></BaseHeader>
+    <BaseHeader selected-nav="1"></BaseHeader>
     <el-row class="container">
       <div class="main" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
         <ArticleList :articles="articles"></ArticleList>
