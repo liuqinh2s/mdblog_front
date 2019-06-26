@@ -70,7 +70,7 @@
         let data = {
           bookId: item.id
         }
-        this.$http.post("https://mdblog.club/book/getSubBooks", data).then((res) => {
+        this.$http.post("https://localhost/book/getSubBooks", data).then((res) => {
           console.log(res)
           this.$store.commit('setBooks', res.data)
           this.isSub += 1
@@ -88,7 +88,7 @@
         let data = {
           bookId: this.$store.state.parent,
         }
-        this.$http.post("https://mdblog.club/book/getSupBooks", data).then((res) => {
+        this.$http.post("https://localhost/book/getSupBooks", data).then((res) => {
           console.log(res)
           this.$store.commit('setBooks', res.data)
           this.isSub -= 1
@@ -100,13 +100,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("https://mdblog.club/book/createBook", data).then((res)=>{
+        this.$http.post("https://localhost/book/createBook", data).then((res)=>{
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("https://mdblog.club/book/getSubBooks", data).then((res) => {
+          this.$http.post("https://localhost/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })
@@ -125,7 +125,7 @@
             parentId: this.$store.state.parent
           }
         }
-        this.$http.post("https://mdblog.club/book/changeDir", data).then((res) => {
+        this.$http.post("https://localhost/book/changeDir", data).then((res) => {
           console.log(res)
           this.$store.commit('setParent', this.$store.state.currentDir)
           this.$router.back()
@@ -137,7 +137,7 @@
       let data = {
         bookId: '0'
       }
-      this.$http.post("https://mdblog.club/book/getSubBooks", data).then((res) => {
+      this.$http.post("https://localhost/book/getSubBooks", data).then((res) => {
         console.log(res)
         if (res.data === "请先登录") {
           this.$router.push("/login")

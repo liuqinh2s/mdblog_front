@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       // "/dev":{
-      //   target: "https://mdblog.club",
+      //   target: "https://localhost",
       //   changeOrigin: true
       // }
     },

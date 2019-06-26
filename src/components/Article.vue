@@ -81,7 +81,7 @@
     },
     mounted() {
       var md = require('turpan');
-      this.$http.get("https://mdblog.club/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
+      this.$http.get("https://localhost/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
         console.log(res)
         this.$refs.article.innerHTML = md.render(res.data.article.content)
         this.title = res.data.article.title
@@ -110,7 +110,7 @@
           }
         ]
         for(let i=0;i<data.length;i++){
-          this.$http.post("https://mdblog.club/article/isDone", data[i]).then((res) => {
+          this.$http.post("https://localhost/article/isDone", data[i]).then((res) => {
             console.log(res)
             this.isDone[data[i].type] = res.data
           })
@@ -144,7 +144,7 @@
         }else{
           key = "cancel"
         }
-        this.$http.post("https://mdblog.club/article/"+key, data).then((res) => {
+        this.$http.post("https://localhost/article/"+key, data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.isDone[type] = isDo

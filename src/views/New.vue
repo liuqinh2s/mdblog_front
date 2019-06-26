@@ -30,7 +30,7 @@
     },
     methods:{
       getArticles() {
-        this.$http.get('https://mdblog.club/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
+        this.$http.get('https://localhost/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
           console.log(res);
           this.articles = res.body;
           this.count++
@@ -38,7 +38,7 @@
       },
       loadMore(){
         this.busy = true;
-        this.$http.get('https://mdblog.club/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
+        this.$http.get('https://localhost/article/getArticleList?type='+this.type+'&page='+this.count).then((res) => {
           console.log(res);
           if(res.body.length===0){
             return
