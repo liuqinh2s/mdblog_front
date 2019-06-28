@@ -32,7 +32,7 @@
     methods:{
       loadMore() {
         this.busy = true;
-        this.$http.get('https://localhost/article/getArticleList?type=' + this.type + '&page=' + this.count).then((res) => {
+        this.$http.get('https://mdblog.club:8443/article/getArticleList?type=' + this.type + '&page=' + this.count).then((res) => {
           console.log(res);
           if (res.body.length === 0) {
             return
