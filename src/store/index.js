@@ -30,6 +30,7 @@ const store = new Vuex.Store({
     selectedNav: "newNav",
     navIndex: 0,
     userId: "",
+    avatar: "",
     authorId: "",
     method: {
       saveArticle(){
@@ -129,6 +130,9 @@ const store = new Vuex.Store({
     },
     setNavIndex(state, navIndex){
       state.navIndex = navIndex
+    },
+    setAvatar(state, avatar){
+      state.avatar = avatar
     }
   }
 })

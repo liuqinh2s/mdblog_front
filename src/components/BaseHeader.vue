@@ -7,7 +7,7 @@
     <input v-model="searchContent" v-if="showSearchInput" class="search-input" placeholder="输入关键词搜索"
            autofocus="autofocus" @keyup.enter="search()"></input>
     <div class="header-left" v-show="!showSearchInput">
-      <router-link to="/home" class="logo-link">
+      <router-link to="/" class="logo-link">
         <img src="../assets/logo.png" alt="logo" class="logo">
       </router-link>
     </div>
@@ -29,9 +29,9 @@
           </router-link>
         </li>
         <li ref="nav3">
-          <router-link to="/mine">
+          <div @click="gotoMine">
             <i class="fas fa-user"></i><span>我的</span>
-          </router-link>
+          </div>
         </li>
       </ul>
     </div>
@@ -110,7 +110,11 @@
         showSearchInput: false
       }
     },
-    props: ['selectedNav'],
+    props: {
+      'selectedNav': {
+        default: "0"
+      }
+    },
     methods: {
       search() {
         this.$http.get("https://mdblog.club:8443/article/search?searchContent=" + this.searchContent).then((res) => {
@@ -141,10 +145,17 @@
         this.$router.push('/hot')
       },
       gotoMine(index) {
-        this.selectNav(index)
-        this.$store.commit('setParent', '0')
-        this.$store.commit('setIsSub', 0)
-        this.$router.push('/mine')
+        if(this.$store.state.userId===""){
+          this.$router.push("/login")
+        }else{
+          this.$store.commit("setAuthorId", getCookie('userId'))
+          this.$router.push("/mine")
+        }
+        // return getCookie('userId')
+        // this.selectNav(index)
+        // this.$store.commit('setParent', '0')
+        // this.$store.commit('setIsSub', 0)
+        // this.$router.push('/mine')
         // if(this.$store.state.mode==='mine'){
         //   this.$router.go(0)
         // }else{
@@ -192,6 +203,7 @@
     mounted() {
       console.log(this.selectedNav)
       this.selectNav(this.selectedNav)
+      this.$store.commit("setUserId", getCookie("userId"))
     },
     // watch: {
     //   '$store.state.selectedNav':function (old, val) {

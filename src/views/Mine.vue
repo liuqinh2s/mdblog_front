@@ -1,5 +1,5 @@
 <template>
-  <Social :user-id="getUserId()"></Social>
+  <Social :user-id="this.$store.state.userId"></Social>
 </template>
 
 <script>
@@ -12,13 +12,7 @@
     name: "Mine",
     components: {Social, BaseHeader},
     methods: {
-      getUserId(){
-        if(getCookie("userId")===""){
-          this.$router.push("/login")
-        }
-        this.$store.commit("setAuthorId", getCookie('userId'))
-        return getCookie('userId')
-      }
+
     },
     mounted() {
       this.$store.commit('setMode', 'book')

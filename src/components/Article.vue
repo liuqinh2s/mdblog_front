@@ -112,7 +112,11 @@
         for(let i=0;i<data.length;i++){
           this.$http.post("https://mdblog.club:8443/article/isDone", data[i]).then((res) => {
             console.log(res)
-            this.isDone[data[i].type] = res.data
+            if(res.data===true){
+              this.isDone[data[i].type] = true
+            }else{
+              this.isDone[data[i].type] = false
+            }
           })
         }
       })
@@ -130,6 +134,10 @@
         return this.userId === this.authorId
       },
       toggleDo(type, isDo) {
+        if(getCookie("userId")===""){
+          this.$router.push("/login")
+        }
+        this.$store.commit("setAuthorId", getCookie('userId'))
         let objectId = {
           "like": this.$route.params.articleId,
           "concern": this.authorId

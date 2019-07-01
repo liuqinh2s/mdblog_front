@@ -220,8 +220,7 @@
           let blob = new Blob([res.data], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8'})
           that.imgSrc = window.URL.createObjectURL(blob);
         })
-      }
-      ,
+      },
       login() {
         let that = this;
         this.$refs.loginForm.validate((valid) => {
@@ -233,7 +232,7 @@
             that.$http.post('https://mdblog.club:8443/user/login', data).then((res) => {
               console.log(res);
               if (res.data.code === 200) {
-                this.$router.push("/home")
+                this.$router.push("/")
               }
               that.$alert(res.data.message, '提示', {
                 confirmButtonText: '确定',

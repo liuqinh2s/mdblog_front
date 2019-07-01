@@ -1,16 +1,28 @@
 <template>
   <div class="comment-main">
-    <div>
+    <div v-if="$store.state.userId">
       <div class="new-comment">
         <a>
           <img class="comment-avatar"
-               src="//upload.jianshu.io/users/upload_avatars/3089421/8bb9554e-e13c-4ee0-b20f-2ee42474a23d.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/114/h/114/format/webp">
+               :src="this.$store.state.avatar">
         </a>
         <textarea placeholder="写下你的评论..." v-model="commentContent" class="comment-area"></textarea>
       </div>
       <div class="btns">
         <!--        <span class="btn-cancel" @click="cancelSend">取消</span>-->
         <button class="btn-send" @click="sendComment(commentContent)">发送</button>
+      </div>
+    </div>
+    <div v-else>
+      <div class="new-comment">
+        <router-link to="/login">
+          <img class="comment-avatar"
+               src="../assets/avatar.png">
+        </router-link>
+        <div class="sign-container">
+          <router-link to="/login" class="btn-sign">登录</router-link>
+          <span>后发表评论</span>
+        </div>
       </div>
     </div>
     <ul class="comments">
@@ -56,7 +68,8 @@
               <i class="far fa-comment-alt"></i>
               <span>回复</span>
             </div>
-            <span v-if="$store.state.userId===subComment.userId" @click="deleteComment(subComment.commentId)" class="remove-comment">
+            <span v-if="$store.state.userId===subComment.userId" @click="deleteComment(subComment.commentId)"
+                  class="remove-comment">
               删除
             </span>
             <div v-if="showSubReply===index1" class="add-comment">
@@ -117,14 +130,14 @@
           }
         })
       },
-      deleteComment(commentId){
-        let data={
+      deleteComment(commentId) {
+        let data = {
           commentId: commentId,
           articleId: this.$route.params.articleId,
         }
         this.$http.post("https://mdblog.club:8443/comment/removeComment", data).then((res) => {
           console.log(res)
-          if(res.data.code===200){
+          if (res.data.code === 200) {
             this.$http.get("https://mdblog.club:8443/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               this.items.splice(0, this.items.length)
@@ -204,17 +217,50 @@
         console.log(res)
         this.items = res.data
       })
+      this.$http.get("https://mdblog.club:8443/article/getAvatar").then((res) => {
+        console.log(res)
+        this.$store.commit("setAvatar", res.bodyText)
+      })
     }
   }
 </script>
 
 <style scoped>
+
   .comment-main {
     margin-top: 60px;
   }
 
   .comment-main .new-comment {
     display: flex;
+  }
+
+  .comment-main .sign-container{
+    padding: 10px 15px;
+    width: 100%;
+    height: 80px;
+    font-size: 13px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: hsla(0,0%,71%,.1);
+    resize: none;
+    outline-style: none;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .comment-main .btn-sign{
+    width: 78px;
+    padding: 7px 18px;
+    margin-right: 1rem;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+    color: #fff!important;
+    background-color: #3194d0;
+    outline: none;
   }
 
   .comment-main .comment-avatar {
@@ -369,7 +415,7 @@
     border-bottom: 1px solid #f0f0f0;
   }
 
-  .remove-comment{
+  .remove-comment {
     font-size: 14px;
     float: right;
     cursor: pointer;

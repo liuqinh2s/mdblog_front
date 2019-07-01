@@ -84,7 +84,7 @@
         articleList: [],
         concernList: [],
         fansList: [],
-        showItems: [false, false, false, false],
+        showItems: [false, false, false, false, false],
       }
     },
     props: ['userId'],
@@ -128,7 +128,7 @@
         return likesCount
       },
       changeNav(item) {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
           if (i !== item) {
             let n = 'nav' + i.toString()
             console.log(n)
@@ -296,7 +296,7 @@
     text-align: center;
   }
 
-  .avatar {
+  .setting .avatar {
     width: 100px;
     height: 100px;
     display: block;
