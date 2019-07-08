@@ -117,7 +117,7 @@
     },
     methods: {
       search() {
-        this.$http.get("https://mdblog.club:8443/article/search?searchContent=" + this.searchContent).then((res) => {
+        this.$http.get("/article/search?searchContent=" + this.searchContent).then((res) => {
           console.log(res)
           this.$store.commit("setArticles", res.data)
           this.$store.commit("setMode", "search")
@@ -172,7 +172,7 @@
           parentId: this.$store.state.parent
         }
         console.log(data)
-        this.$http.post("https://mdblog.club:8443/article/createArticle", data).then((res) => {
+        this.$http.post("/article/createArticle", data).then((res) => {
           console.log(res)
           if (res.data === "请先登录") {
             this.$router.push("/login")
@@ -186,13 +186,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("https://mdblog.club:8443/book/createBook", data).then((res) => {
+        this.$http.post("/book/createBook", data).then((res) => {
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("https://mdblog.club:8443/book/getSubBooks", data).then((res) => {
+          this.$http.post("/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })

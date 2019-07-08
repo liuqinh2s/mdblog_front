@@ -21,9 +21,14 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import BootstrapVue from 'bootstrap-vue'
 import 'babel-polyfill'
 import infiniteScroll from 'vue-infinite-scroll'
-// import ADDRESS from '@/assets/js/common.js'
+import axios from 'axios'
 
-// import '@/assets/css/vue.css'
+const host = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://mdblog.club:8443' // 根据 process.env.NODE_ENV 的值判断当前是什么环境
+const instance = axios.create({
+  baseURL: host
+})
+Vue.prototype.$http = instance
+
 
 fontawesome.library.add(solid)
 fontawesome.library.add(regular)
@@ -33,7 +38,7 @@ Vue.use(VueResource)
 Vue.use(ElementUI)
 Vue.use(BootstrapVue)
 Vue.use(infiniteScroll)
-// Vue.prototype.ADDRESS = ADDRESS
+
 
 Vue.directive('highlight',function (el) {
   let blocks = el.querySelectorAll('pre code');

@@ -118,11 +118,11 @@
           content: content
         }
         let that = this
-        this.$http.post("https://mdblog.club:8443/comment/addComment", data).then((res) => {
+        this.$http.post("/comment/addComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.commentContent = ""
-            this.$http.get("https://mdblog.club:8443/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               that.items.splice(0, that.items.length)
               that.items = res.data
@@ -135,10 +135,10 @@
           commentId: commentId,
           articleId: this.$route.params.articleId,
         }
-        this.$http.post("https://mdblog.club:8443/comment/removeComment", data).then((res) => {
+        this.$http.post("/comment/removeComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
-            this.$http.get("https://mdblog.club:8443/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               this.items.splice(0, this.items.length)
               this.items = res.data
@@ -159,11 +159,11 @@
         this.showReply = -1
         this.showSubReply = -1
         this.subCommentContent = ""
-        this.$http.post("https://mdblog.club:8443/comment/addComment", data).then((res) => {
+        this.$http.post("/comment/addComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.commentContent = ""
-            this.$http.get("https://mdblog.club:8443/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               this.items.splice(0, this.items.length)
               this.items = res.data
@@ -182,7 +182,7 @@
         } else {
           key = "cancel"
         }
-        this.$http.post("https://mdblog.club:8443/article/" + key, data).then((res) => {
+        this.$http.post("/article/" + key, data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             if (key === "justDo") {
@@ -213,11 +213,11 @@
       }
     },
     mounted() {
-      this.$http.get("https://mdblog.club:8443/article/getComments?articleId=" + this.articleId).then((res) => {
+      this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
         console.log(res)
         this.items = res.data
       })
-      this.$http.get("https://mdblog.club:8443/article/getAvatar").then((res) => {
+      this.$http.get("/article/getAvatar").then((res) => {
         console.log(res)
         this.$store.commit("setAvatar", res.bodyText)
       })

@@ -13,6 +13,7 @@ import Article from '@/components/Article'
 import Comment from '@/components/Comment'
 import Social from '@/views/Social'
 import Search from '@/views/Search'
+import Chaobi from '@/views/Chaobi'
 
 Vue.use(Router)
 
@@ -84,6 +85,11 @@ export default new Router({
       path: '/search/:searchContent',
       name: 'Search',
       component: Search,
+    },
+    {
+      path: '/chaobi',
+      name: 'Chaobi',
+      component: Chaobi
     },
   ]
 })

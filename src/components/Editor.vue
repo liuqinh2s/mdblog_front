@@ -85,7 +85,7 @@
         // this.cm.hmd.Fold.setStatus("hmdFoldHTML", true);
         this.cm.hmd.Fold._enabled.html = true;
         let that = this
-        this.$http.get("https://mdblog.club:8443/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
+        this.$http.get("/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
           that.title = res.data.article.title
           if(res.data.article.tags!==null&&res.data.article.tags!==""){
             that.tagList = res.data.article.tags.split(';')
@@ -134,7 +134,7 @@
         console.log(this.cm.getOption('hmdFoldHTML'));
       },
       showBooks() {
-        this.$http.post("https://mdblog.club:8443/article/getAllTopBooks", {userId: "0c037d72-0455-4496-9529-568aed59bd5a"}).then((res) => {
+        this.$http.post("/article/getAllTopBooks", {userId: "0c037d72-0455-4496-9529-568aed59bd5a"}).then((res) => {
           console.log(res);
         })
       },
@@ -185,7 +185,7 @@
           tagList: Array.from(this.tagSet)
         };
         console.log(data)
-        this.$http.post("https://mdblog.club:8443/article/saveArticle", data).then((res) => {
+        this.$http.post("/article/saveArticle", data).then((res) => {
           console.log(res);
         });
       },
@@ -194,7 +194,7 @@
         let data = {
           articleId: this.articleId
         }
-        this.$http.post("https://mdblog.club:8443/article/deleteArticle", data).then((res) => {
+        this.$http.post("/article/deleteArticle", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.$router.push("/mine")
@@ -209,7 +209,7 @@
           articleId: this.articleId,
           tagList: Array.from(this.tagSet)
         }
-        this.$http.post("https://mdblog.club:8443/article/publish", data).then((res) => {
+        this.$http.post("/article/publish", data).then((res) => {
           console.log(res)
           this.showTools = false
           if (res.data.code === 200) {
@@ -222,7 +222,7 @@
           articleId: this.articleId,
           tagList: Array.from(this.tagSet)
         }
-        this.$http.post("https://mdblog.club:8443/article/publishCancel", data).then((res) => {
+        this.$http.post("/article/publishCancel", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.isPublished = false
@@ -231,7 +231,7 @@
         })
       },
       searchTag() {
-        this.$http.get("https://mdblog.club:8443/tag/searchTag?keyword=" + this.tags).then((res) => {
+        this.$http.get("/tag/searchTag?keyword=" + this.tags).then((res) => {
           console.log(res)
           this.items = res.body
         })
@@ -253,7 +253,7 @@
             articleId: that.articleId,
             tag: item
           }
-          // that.$http.post("https://mdblog.club:8443/tag/removeTag", data).then((res) => {
+          // that.$http.post("/tag/removeTag", data).then((res) => {
           //   console.log("6666666666")
           //   console.log(res)
           // })
@@ -274,7 +274,7 @@
           articleId: this.articleId,
           tag: item
         }
-        // this.$http.post("https://mdblog.club:8443/tag/addTag", data).then((res) => {
+        // this.$http.post("/tag/addTag", data).then((res) => {
         //   console.log(res)
         //   if(res.data.code===200){
         //     this.$refs.tags.insertBefore(span, this.$refs.tagInput)
@@ -299,7 +299,7 @@
               articleId: that.articleId,
               tag: that.tagList[i]
             }
-            // that.$http.post("https://mdblog.club:8443/tag/removeTag", data).then((res) => {
+            // that.$http.post("/tag/removeTag", data).then((res) => {
             //   console.log(res)
             // })
           }
@@ -339,11 +339,6 @@
 <style scoped>
   .editor-main {
     height: 100vh;
-  }
-
-  .editor-main .menu{
-    position: absolute;
-    right: 1rem;
   }
 
   .editor-main .back {
@@ -397,6 +392,10 @@
     display: none;
   }
 
+  .editor-main .menu{
+    right: 1rem;
+  }
+
   .editor-main .tools {
     position: absolute;
     display: flex;
@@ -407,7 +406,6 @@
     margin: 0;
     font-size: 14px;
     width: 100px;
-    right: 1rem;
     z-index: 1000;
     background-color: white;
     box-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.35);
@@ -444,7 +442,7 @@
     margin: 0 2rem 1rem;
     padding: 0;
     max-width: 300px;
-    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.18);
     border-color: #ddd;
     border: 1px solid transparent;
     border-radius: 4px;
@@ -472,6 +470,28 @@
   @media screen and (max-width: 1042px) {
     .editor-main {
       /*padding-bottom: 60px;*/
+    }
+
+    .editor-main .menu{
+      position: absolute;
+      right: 1rem;
+    }
+
+    .editor-main .tools {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      list-style-type: none;
+      justify-content: space-around;
+      padding: 10px;
+      margin: 0;
+      font-size: 14px;
+      width: 100px;
+      right: 1rem;
+      z-index: 1000;
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.35);
+      border-radius: 3px;
     }
   }
 </style>

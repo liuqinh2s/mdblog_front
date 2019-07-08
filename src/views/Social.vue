@@ -52,7 +52,7 @@
       <div v-if="showItems[4]" class="setting">
         <el-upload
           class="upload-demo"
-          action="https://mdblog.club:8443/upload/upload"
+          action="/upload/upload"
           :http-request="upLoad"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
@@ -61,6 +61,8 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           <div slot="tip" class="el-upload__tip">点击头像即可上传，只能上传jpg/png文件，且不超过2Mb</div>
         </el-upload>
+        <span>昵称</span>
+        <input :placeholder="userName" class="user-name"></input>
       </div>
     </div>
   </div>
@@ -93,7 +95,7 @@
         const formData = new FormData();
         formData.append('file', file.file);
         console.log(file);
-        this.$http.post("https://mdblog.club:8443/upload/upload", formData).then((res) => {
+        this.$http.post("/upload/upload", formData).then((res) => {
           console.log(res)
         })
       },
@@ -158,7 +160,7 @@
       let data = {
         userId: this.$store.state.authorId
       }
-      this.$http.post("https://mdblog.club:8443/social/getSocial", data).then((res) => {
+      this.$http.post("/social/getSocial", data).then((res) => {
         console.log(res)
         this.articleList = res.data.articleList
         this.concernList = res.data.concernList
@@ -252,6 +254,14 @@
   .social-main .nav .active {
     border-bottom: 2px solid #646464;
     color: #646464;
+  }
+
+  .social-main .user-name{
+    padding: 5px 10px;
+    font-size: 15px;
+    border: 1px solid #c8c8c8;
+    border-radius: 4px;
+    background-color: hsla(0,0%,71%,.1);
   }
 
   @media screen and (max-width: 1042px) {

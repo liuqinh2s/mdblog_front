@@ -122,7 +122,17 @@
       };
       let that = this;
       let checkImageCode = function (rule, value, callback) {
-        that.$http.post('https://mdblog.club:8443/user/sendImageCode?imageCode=' + value).then((res) => {
+        that.$http.post('/user/sendImageCode?imageCode=' + value).then((res) => {
+          console.log(res);
+          if (res.data.code !== 200) {
+            that.refreshImageCode()
+            return callback(new Error(res.data.message));
+          }
+          callback();
+        });
+      };
+      let checkUserName = function (rule, value, callback) {
+        that.$http.get('/user/isNameUsed?name=' + value).then((res) => {
           console.log(res);
           if (res.data.code !== 200) {
             return callback(new Error(res.data.message));
@@ -156,7 +166,8 @@
             {validator: checkImageCode, trigger: 'blur'},
           ],
           userName: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
+            {required: true, message: '请输入用户名', trigger: 'blur'},
+            {validator: checkUserName, trigger: 'blur'}
           ],
           mobile: [
             {required: true, message: '请输入手机号', trigger: 'blur'},
@@ -213,7 +224,7 @@
         let that = this;
         this.$http({
           method: 'get',
-          url: 'https://mdblog.club:8443/user/imageCode',
+          url: '/user/imageCode',
           responseType: "blob"
         }).then((res) => {
           console.log(res);
@@ -229,7 +240,7 @@
             let hash = sha256(that.ruleForm.loginPwd);    //hash为加密后的密码
             let data = {'mobile': that.ruleForm.userUnique, 'password': hash};
             /*接口请求*/
-            that.$http.post('https://mdblog.club:8443/user/login', data).then((res) => {
+            that.$http.post('/user/login', data).then((res) => {
               console.log(res);
               if (res.data.code === 200) {
                 this.$router.push("/")
@@ -260,7 +271,7 @@
             }
             this.loading = true
             /*接口请求*/
-            this.$http.post('https://mdblog.club:8443/user/register', data).then((res) => {
+            this.$http.post('/user/register', data).then((res) => {
               console.log(res);
               this.loading = false
               if (res.data.code !== 200) {
@@ -281,7 +292,7 @@
           return;
         }
         /*接口请求*/
-        this.$http.get('https://mdblog.club:8443/user/verifyCode?mobile=' + this.ruleForm.mobile).then((res) => {
+        this.$http.get('/user/verifyCode?mobile=' + this.ruleForm.mobile).then((res) => {
           console.log(res);
           // 验证码60秒倒计时
           this.codeMsg = "重新发送(" + this.countdown + ")";

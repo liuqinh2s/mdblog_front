@@ -19,6 +19,7 @@
     "@types/codemirror": "^0.0.56",
     "@types/glob": "^5.0.35",
     "@types/mermaid": "^8.0.0",
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap-vue": "^2.0.0-rc.19",
     "codemirror": "^5.48.0",
