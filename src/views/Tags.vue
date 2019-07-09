@@ -55,7 +55,7 @@
     },
     methods:{
       getArticleListByTag(tag){
-        this.$http.get("/tag/getArticleListByTag?tag="+tag).then((res) => {
+        this.$axios.get("/tag/getArticleListByTag?tag="+tag).then((res) => {
           console.log(res)
           this.articles = res.data
           this.showArticleList = true
@@ -68,7 +68,7 @@
     mounted() {
       this.$store.commit('setMode', 'tags')
       this.$store.commit("setSelectedNav", "2")
-      this.$http.get("/tag/getAllTags").then((res) => {
+      this.$axios.get("/tag/getAllTags").then((res) => {
         console.log(res)
         this.tags = res.data
       })

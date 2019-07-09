@@ -95,7 +95,7 @@
         const formData = new FormData();
         formData.append('file', file.file);
         console.log(file);
-        this.$http.post("/upload/upload", formData).then((res) => {
+        this.$axios.post("/upload/upload", formData).then((res) => {
           console.log(res)
         })
       },
@@ -160,7 +160,7 @@
       let data = {
         userId: this.$store.state.authorId
       }
-      this.$http.post("/social/getSocial", data).then((res) => {
+      this.$axios.post("/social/getSocial", data).then((res) => {
         console.log(res)
         this.articleList = res.data.articleList
         this.concernList = res.data.concernList

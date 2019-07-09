@@ -23,11 +23,19 @@ import 'babel-polyfill'
 import infiniteScroll from 'vue-infinite-scroll'
 import axios from 'axios'
 
-const host = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://mdblog.club:8443' // 根据 process.env.NODE_ENV 的值判断当前是什么环境
-const instance = axios.create({
-  baseURL: host
-})
-Vue.prototype.$http = instance
+// const host = process.env.NODE_ENV === '"development"' ? '"http://localhost:8080"' : '"https://47.100.222.253:8443"' // 根据 process.env.NODE_ENV 的值判断当前是什么环境
+// const instance = axios.create({
+//   baseURL: host
+// })
+if (process.env.NODE_ENV === 'development') {
+  axios.defaults.baseURL = 'http://localhost:8080/';
+} else if (process.env.NODE_ENV === 'debug') {
+  axios.defaults.baseURL = 'http://localhost:8080/';
+} else if (process.env.NODE_ENV === 'production') {
+  axios.defaults.baseURL = 'https://mdblog.club:8443';
+}
+Vue.prototype.$axios = axios;
+// Vue.prototype.$http = instance
 
 
 fontawesome.library.add(solid)
@@ -47,11 +55,11 @@ Vue.directive('highlight',function (el) {
   })
 })
 
-Vue.config.productionTip = false
-Vue.http.interceptors.push((request, next) => {
-  request.credentials = true;
-  next();
-});
+// Vue.config.productionTip = false
+// Vue.http.interceptors.push((request, next) => {
+//   request.credentials = true;
+//   next();
+// });
 
 new Vue({
   el: '#app',

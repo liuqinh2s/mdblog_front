@@ -81,7 +81,7 @@
     },
     mounted() {
       var md = require('turpan');
-      this.$http.get("/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
+      this.$axios.get("/article/getArticle?articleId=" + this.$route.params.articleId).then((res) => {
         console.log(res)
         this.$refs.article.innerHTML = md.render(res.data.article.content)
         this.title = res.data.article.title
@@ -110,7 +110,7 @@
           }
         ]
         for(let i=0;i<data.length;i++){
-          this.$http.post("/article/isDone", data[i]).then((res) => {
+          this.$axios.post("/article/isDone", data[i]).then((res) => {
             console.log(res)
             if(res.data===true){
               this.isDone[data[i].type] = true
@@ -152,7 +152,7 @@
         }else{
           key = "cancel"
         }
-        this.$http.post("/article/"+key, data).then((res) => {
+        this.$axios.post("/article/"+key, data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.isDone[type] = isDo

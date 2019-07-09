@@ -118,11 +118,11 @@
           content: content
         }
         let that = this
-        this.$http.post("/comment/addComment", data).then((res) => {
+        this.$axios.post("/comment/addComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.commentContent = ""
-            this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$axios.get("/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               that.items.splice(0, that.items.length)
               that.items = res.data
@@ -135,10 +135,10 @@
           commentId: commentId,
           articleId: this.$route.params.articleId,
         }
-        this.$http.post("/comment/removeComment", data).then((res) => {
+        this.$axios.post("/comment/removeComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
-            this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$axios.get("/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               this.items.splice(0, this.items.length)
               this.items = res.data
@@ -159,11 +159,11 @@
         this.showReply = -1
         this.showSubReply = -1
         this.subCommentContent = ""
-        this.$http.post("/comment/addComment", data).then((res) => {
+        this.$axios.post("/comment/addComment", data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             this.commentContent = ""
-            this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
+            this.$axios.get("/article/getComments?articleId=" + this.articleId).then((res) => {
               console.log(res)
               this.items.splice(0, this.items.length)
               this.items = res.data
@@ -182,7 +182,7 @@
         } else {
           key = "cancel"
         }
-        this.$http.post("/article/" + key, data).then((res) => {
+        this.$axios.post("/article/" + key, data).then((res) => {
           console.log(res)
           if (res.data.code === 200) {
             if (key === "justDo") {
@@ -213,13 +213,13 @@
       }
     },
     mounted() {
-      this.$http.get("/article/getComments?articleId=" + this.articleId).then((res) => {
+      this.$axios.get("/article/getComments?articleId=" + this.articleId).then((res) => {
         console.log(res)
         this.items = res.data
       })
-      this.$http.get("/article/getAvatar").then((res) => {
+      this.$axios.get("/article/getAvatar").then((res) => {
         console.log(res)
-        this.$store.commit("setAvatar", res.bodyText)
+        this.$store.commit("setAvatar", res.dataText)
       })
     }
   }

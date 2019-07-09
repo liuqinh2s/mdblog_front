@@ -117,7 +117,7 @@
     },
     methods: {
       search() {
-        this.$http.get("/article/search?searchContent=" + this.searchContent).then((res) => {
+        this.$axios.get("/article/search?searchContent=" + this.searchContent).then((res) => {
           console.log(res)
           this.$store.commit("setArticles", res.data)
           this.$store.commit("setMode", "search")
@@ -172,12 +172,12 @@
           parentId: this.$store.state.parent
         }
         console.log(data)
-        this.$http.post("/article/createArticle", data).then((res) => {
+        this.$axios.post("/article/createArticle", data).then((res) => {
           console.log(res)
           if (res.data === "请先登录") {
             this.$router.push("/login")
           } else {
-            this.$router.push("/editor/" + res.bodyText)
+            this.$router.push("/editor/" + res.dataText)
           }
         })
       },
@@ -186,13 +186,13 @@
           parentId: this.$store.state.parent,
           bookName: this.currentName
         }
-        this.$http.post("/book/createBook", data).then((res) => {
+        this.$axios.post("/book/createBook", data).then((res) => {
           console.log(res)
           this.show = false
           let data = {
             bookId: this.$store.state.parent
           }
-          this.$http.post("/book/getSubBooks", data).then((res) => {
+          this.$axios.post("/book/getSubBooks", data).then((res) => {
             console.log(res)
             this.$store.commit('setBooks', res.data)
           })

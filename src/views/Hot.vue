@@ -32,13 +32,13 @@
     methods:{
       loadMore() {
         this.busy = true;
-        this.$http.get('/article/getArticleList?type=' + this.type + '&page=' + this.count).then((res) => {
+        this.$axios.get('/article/getArticleList?type=' + this.type + '&page=' + this.count).then((res) => {
           console.log(res);
-          if (res.body.length === 0) {
+          if (res.data.length === 0) {
             return
           }
-          for (let i = 0; i < res.body.length; i++) {
-            this.articles.push(res.body[i]);
+          for (let i = 0; i < res.data.length; i++) {
+            this.articles.push(res.data[i]);
           }
           this.count++;
           this.busy = false;

@@ -122,7 +122,7 @@
       };
       let that = this;
       let checkImageCode = function (rule, value, callback) {
-        that.$http.post('/user/sendImageCode?imageCode=' + value).then((res) => {
+        this.$axios.post('/user/sendImageCode?imageCode=' + value).then((res) => {
           console.log(res);
           if (res.data.code !== 200) {
             that.refreshImageCode()
@@ -132,7 +132,7 @@
         });
       };
       let checkUserName = function (rule, value, callback) {
-        that.$http.get('/user/isNameUsed?name=' + value).then((res) => {
+        this.$axios.get('/user/isNameUsed?name=' + value).then((res) => {
           console.log(res);
           if (res.data.code !== 200) {
             return callback(new Error(res.data.message));
@@ -222,7 +222,7 @@
     methods: {
       refreshImageCode() {
         let that = this;
-        this.$http({
+        this.$axios({
           method: 'get',
           url: '/user/imageCode',
           responseType: "blob"
@@ -240,7 +240,7 @@
             let hash = sha256(that.ruleForm.loginPwd);    //hash为加密后的密码
             let data = {'mobile': that.ruleForm.userUnique, 'password': hash};
             /*接口请求*/
-            that.$http.post('/user/login', data).then((res) => {
+            this.$axios.post('/user/login', data).then((res) => {
               console.log(res);
               if (res.data.code === 200) {
                 this.$router.push("/")
@@ -271,7 +271,7 @@
             }
             this.loading = true
             /*接口请求*/
-            this.$http.post('/user/register', data).then((res) => {
+            this.$axios.post('/user/register', data).then((res) => {
               console.log(res);
               this.loading = false
               if (res.data.code !== 200) {
@@ -292,7 +292,7 @@
           return;
         }
         /*接口请求*/
-        this.$http.get('/user/verifyCode?mobile=' + this.ruleForm.mobile).then((res) => {
+        this.$axios.get('/user/verifyCode?mobile=' + this.ruleForm.mobile).then((res) => {
           console.log(res);
           // 验证码60秒倒计时
           this.codeMsg = "重新发送(" + this.countdown + ")";

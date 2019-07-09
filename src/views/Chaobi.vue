@@ -14,16 +14,16 @@
     },
     methods:{
       getBtn(){
-        this.$http.get("/chaobi/getBtn").then((res)=>{
+        this.$axios.get("/chaobi/getBtn").then((res)=>{
           console.log(res)
-          this.message = res.bodyText===1?"关闭炒币脚本":"开启炒币脚本"
+          this.message = res.dataText===1?"关闭炒币脚本":"开启炒币脚本"
         })
       },
       setBtn(){
         if(this.message==="开启炒币脚本"){
-          this.$http.get("/chaobi/setBtn?btn=1").then((res)=>{
+          this.$axios.get("/chaobi/setBtn?btn=1").then((res)=>{
             console.log(res)
-            if(res.bodyText==="设置成功"){
+            if(res.dataText==="设置成功"){
               this.$alert("设置成功", '提示', {
                 confirmButtonText: '确定',
                 type: 'info',
@@ -39,9 +39,9 @@
             }
           })
         }else{
-          this.$http.get("/chaobi/setBtn?btn=0").then((res)=>{
+          this.$axios.get("/chaobi/setBtn?btn=0").then((res)=>{
             console.log(res)
-            if(res.bodyText==="设置成功"){
+            if(res.dataText==="设置成功"){
               this.$alert("设置成功", '提示', {
                 confirmButtonText: '确定',
                 type: 'info',
