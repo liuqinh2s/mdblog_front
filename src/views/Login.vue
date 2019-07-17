@@ -122,17 +122,16 @@
       };
       let that = this;
       let checkImageCode = function (rule, value, callback) {
-        this.$axios.post('/user/sendImageCode?imageCode=' + value).then((res) => {
+        that.$axios.get('/user/sendImageCode?imageCode=' + value).then((res) => {
           console.log(res);
           if (res.data.code !== 200) {
-            that.refreshImageCode()
             return callback(new Error(res.data.message));
           }
           callback();
         });
       };
       let checkUserName = function (rule, value, callback) {
-        this.$axios.get('/user/isNameUsed?name=' + value).then((res) => {
+        that.$axios.get('/user/isNameUsed?name=' + value).then((res) => {
           console.log(res);
           if (res.data.code !== 200) {
             return callback(new Error(res.data.message));
