@@ -25,7 +25,7 @@
     "codemirror": "^5.48.0",
     "codemirror-widgets": "^1.4.2",
     "element-ui": "^2.8.2",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "font-awesome": "^4.7.0",
     "github-markdown-css": "^3.0.1",
     "glob": "^7.1.2",
